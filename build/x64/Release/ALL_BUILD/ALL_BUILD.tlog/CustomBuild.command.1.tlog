@@ -1,0 +1,10 @@
+^D:\CODE C++\STUDENT_SCORE_MANAGEMENT_SYSTEM\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SD:/code c++/Student_Score_Management_System" "-BD:/code c++/Student_Score_Management_System/build" --check-stamp-file "D:/code c++/Student_Score_Management_System/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

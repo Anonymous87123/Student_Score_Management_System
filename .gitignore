@@ -1,0 +1,7 @@
+# Build artifacts that cause "which exe am I running" confusion (Week 14 α 收口)
+#
+# 双轨承诺仍保留：g++ → 根目录 edusys.exe；CMake/MSVC → build/Release/edusys.exe。
+# 但两份产物都不进版本库，避免远端跟踪与本地编译产物之间漂移、又骗 corrupt_check.bat
+# / demo_input.txt 这种"默认认 ./edusys.exe"的脚本。
+/edusys.exe
+/build/Release/edusys.exe

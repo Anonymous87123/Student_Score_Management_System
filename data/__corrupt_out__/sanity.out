@@ -1,0 +1,41 @@
+==============================================
+ EduSys - Week 11 + Week 13 Self-Test (--self-test)
+ Run mode        : LOADED (persisted)
+ [Week11] AUTH OK            : admin (role=Admin)
+ [Week11] AUTH FAIL expected : Invalid username or password
+ [Week11] PERM REJECT ok     : student cannot create student
+ [Week11] RANGE REJECT ok    : usual=999 rejected
+ [Week11] MUTATIONS skipped  : LOADED run, verifying persisted state instead
+ [Week11] FINAL ASSERT ok    : S002 absent, S003 present, scores consistent
+ Week 11         : self-check PASSED
+
+ -- Week 13 boundary checks (A-E groups, read-only) --
+  Group A (auth / session):
+   [A1 unknown user] PASS
+   [A2 bad password] PASS
+   [A3 changePassword while unlogged] PASS
+   [A4 changePassword empty new] PASS
+   [A5 unlogged read] PASS
+  Group B (field validation):
+   [B1 score usual=101] PASS
+   [B2 score final=-1] PASS
+   [B3 score empty studentId] PASS
+   [B4 student empty id] PASS
+   [B5 student year<=0] PASS
+   [B6 course empty id] PASS
+   [B7 course credit<=0] PASS
+   [B8 course unknown teacher] PASS
+  Group C (uniqueness):
+   [C1 duplicate student S001] PASS
+   [C2 duplicate course C001] PASS
+  Group D (cascade residue):
+   [D1 no ghost student S002] PASS
+   [D2 no ghost score for S002] PASS
+   [D3 no ghost account for S002] PASS
+  Group E (teacher whitelist):
+   [E1 ghost-teacher upsert C001] PASS
+   [E2 ghost-teacher findByCourse C001] PASS
+   [E3 teacher listAll whitelist] PASS (n=3)
+   [E4 student cannot read others] PASS
+ Week 13         : boundary-check PASSED
+==============================================

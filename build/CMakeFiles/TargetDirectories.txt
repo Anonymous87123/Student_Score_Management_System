@@ -1,0 +1,3 @@
+D:/code c++/Student_Score_Management_System/build/CMakeFiles/edusys.dir
+D:/code c++/Student_Score_Management_System/build/CMakeFiles/ALL_BUILD.dir
+D:/code c++/Student_Score_Management_System/build/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,9 @@
+==============================================
+ EduSys - Week 11 + Week 13 Self-Test (--self-test)
+ Run mode        : LOADED (persisted)
+ [Week11] AUTH OK            : admin (role=Admin)
+ [Week11] AUTH FAIL expected : Invalid username or password
+ [Week11] PERM REJECT ok     : student cannot create student
+ [Week11] RANGE REJECT ok    : usual=999 rejected
+ [Week11] MUTATIONS skipped  : LOADED run, verifying persisted state instead
+Fatal: Self-check: score for S003 should exist

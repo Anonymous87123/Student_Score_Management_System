@@ -1,0 +1,8 @@
+set(__QT_DEPLOY_TARGET_edusys_core_FILE D:/Student_Score_Management_System/build-qt-introduceQt/libedusys_core.a)
+set(__QT_DEPLOY_TARGET_edusys_core_TYPE STATIC_LIBRARY)
+set(__QT_DEPLOY_TARGET_edusys_FILE D:/Student_Score_Management_System/build-qt-introduceQt/edusys.exe)
+set(__QT_DEPLOY_TARGET_edusys_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_edusys_RUNTIME_DLLS )
+set(__QT_DEPLOY_TARGET_edusys_gui_FILE D:/Student_Score_Management_System/build-qt-introduceQt/edusys_gui.exe)
+set(__QT_DEPLOY_TARGET_edusys_gui_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_edusys_gui_RUNTIME_DLLS D:/Qt/6.11.0/mingw_64/bin/Qt6Widgets.dll;D:/Qt/6.11.0/mingw_64/bin/Qt6Gui.dll;D:/Qt/6.11.0/mingw_64/bin/Qt6Core.dll)

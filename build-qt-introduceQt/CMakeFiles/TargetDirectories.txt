@@ -1,0 +1,5 @@
+D:/Student_Score_Management_System/build-qt-introduceQt/CMakeFiles/edusys_core.dir
+D:/Student_Score_Management_System/build-qt-introduceQt/CMakeFiles/edusys.dir
+D:/Student_Score_Management_System/build-qt-introduceQt/CMakeFiles/edusys_gui.dir
+D:/Student_Score_Management_System/build-qt-introduceQt/CMakeFiles/edit_cache.dir
+D:/Student_Score_Management_System/build-qt-introduceQt/CMakeFiles/rebuild_cache.dir

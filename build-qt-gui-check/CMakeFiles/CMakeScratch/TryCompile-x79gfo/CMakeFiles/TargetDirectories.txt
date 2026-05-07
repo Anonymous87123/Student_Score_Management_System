@@ -1,0 +1,3 @@
+D:/Student_Score_Management_System/build-qt-gui-check/CMakeFiles/CMakeScratch/TryCompile-x79gfo/CMakeFiles/cmTC_c6535.dir
+D:/Student_Score_Management_System/build-qt-gui-check/CMakeFiles/CMakeScratch/TryCompile-x79gfo/CMakeFiles/edit_cache.dir
+D:/Student_Score_Management_System/build-qt-gui-check/CMakeFiles/CMakeScratch/TryCompile-x79gfo/CMakeFiles/rebuild_cache.dir

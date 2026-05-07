@@ -38,12 +38,6 @@ std::string findStudentName(const std::vector<Student>& students, const std::str
     return (it == students.end()) ? std::string{} : it->getName();
 }
 
-std::string findCourseName(const std::vector<Course>& courses, const std::string& id) {
-    auto it = std::find_if(courses.begin(), courses.end(),
-        [&](const Course& c) { return c.getCourseId() == id; });
-    return (it == courses.end()) ? std::string{} : it->getCourseName();
-}
-
 double findCourseCredit(const std::vector<Course>& courses, const std::string& id) {
     auto it = std::find_if(courses.begin(), courses.end(),
         [&](const Course& c) { return c.getCourseId() == id; });

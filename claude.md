@@ -571,3 +571,235 @@ flowchart TD
 ---
 
 本修订版方案的核心思想可以概括为一句话：**把课程项目做成一个真正可交付的小型软件系统，而不是一个概念堆砌的大型设想图。** 在这一前提下，项目依然完整覆盖了面向对象、模板、异常、文件流、权限控制、数据结构与算法等 C++ 课程重点，同时显著降低了实施风险，更适合作为后续编码与答辩的统一依据。
+
+---
+
+## 8. `introduceQt` 分支 Qt GUI 嵌入计划
+
+本章节仅适用于 `introduceQt` 分支，目标是在**不破坏现有 CLI 主版本与回归验证链路**的前提下，为系统新增一个与控制台版本业务功能等价的 Qt 图形界面版本。
+
+### 8.1 总体目标与默认决策
+
+本次 Qt 计划的目标如下：
+
+* 在 `introduceQt` 分支上引入 **Qt 6 + Qt Widgets + CMake**。
+* 实现一个与当前控制台版本**业务能力等价**的桌面 GUI。
+* 保留现有 `edusys` CLI 程序与 `--self-test` 路径，避免破坏既有自动化回归能力。
+* 保证 GUI 版本与 CLI 版本共用同一套 `model / storage / service / report` 逻辑，避免出现“双份业务规则”。
+
+本次实现默认锁定以下方案：
+
+* **GUI 技术栈**：`Qt Widgets`
+* **交付形态**：GUI + CLI 共存
+* **平台与工具链**：Windows-first，`Qt 6 MinGW 64-bit`，GUI 分支以 `CMake` 作为唯一正式构建入口
+* **功能等价范围**：三类角色业务功能、统计、预警报告、CSV 导出、密码修改、数据持久化全部与控制台一致
+* **非等价范围**：`--self-test` 与 `tools/corrupt_check.bat` 继续作为 CLI 维护入口，不纳入 GUI 菜单项
+
+### 8.2 构建与工程组织方案
+
+为保证 Qt 接入可控，本分支采用“核心层不动、界面层并行新增”的组织方式：
+
+* **保留既有核心目录不变**：`model / storage / service / report` 继续作为 CLI 与 GUI 共用核心层，不向这些层引入 Qt 类型、信号槽语义或控件依赖。
+* **保留 `view/` 目录作为控制台 UI**：现有 `BaseMenu / AdminMenu / TeacherMenu / StudentMenu` 不删除，继续服务于 CLI 版本。
+* **新增并行的 `gui/` 目录**：专门承载 Qt 窗口、对话框与控件逻辑，避免与控制台 `view/` 混杂。
+* **新增共享装配层 `AppContext`**：在 `include/EduSys/app/` 与 `src/app/` 中加入统一上下文，负责封装：
+  * `data/` 目录检查
+  * 空仓 seed
+  * 各 `Repository` 实例
+  * `AuthService / StudentService / CourseService / ScoreService / StatsService / ReportExporter`
+* **拆分入口文件**：
+  * `main.cpp` 继续只负责 CLI 入口与 `--self-test`
+  * 新增独立 GUI 入口文件，用于生成 `edusys_gui`
+* **CMake 同时维护两个可执行目标**：
+  * `edusys`：现有 CLI，可继续跑 `--self-test`
+  * `edusys_gui`：新的 Qt Widgets GUI
+* **不扩展 `build.bat`**：Qt 构建不硬塞回纯 `g++` 单行编译路径，避免脚本复杂度失控；GUI 分支统一走 CMake
+
+### 8.3 GUI 信息架构与窗口划分
+
+本次 GUI 采用“登录对话框 + 角色主窗口”模式，不做单窗口多角色切换。
+
+#### 8.3.1 登录入口
+
+新增 `LoginDialog`，用于替代 CLI 的登录循环，行为对齐原则如下：
+
+* 提供用户名与密码输入框
+* 认证成功后，根据角色分发到对应主窗口
+* 连续 3 次认证失败后退出应用，语义对齐控制台版本
+* 用户主动关闭登录框或点击取消，等价于控制台中的“空用户名退出”
+
+#### 8.3.2 主窗口划分
+
+登录成功后按角色进入三个独立主窗口：
+
+* `AdminWindow`
+* `TeacherWindow`
+* `StudentWindow`
+
+统一要求：
+
+* 采用 `QMainWindow + QTabWidget`
+* 不使用 QML
+* 不使用 MDI
+* 不做复杂主题系统与视觉重设计
+
+#### 8.3.3 数据展示与编辑策略
+
+为了优先保证功能落地而非 GUI 架构复杂度，本次 v1 统一采用如下控件策略：
+
+* **数据展示**：统一采用 `QTableWidget`
+* **增删改表单**：统一采用模态 `QDialog`
+* **提示与错误反馈**：统一采用 `QMessageBox`
+
+明确不在 v1 引入：
+
+* `QAbstractTableModel`
+* 自定义代理模型
+* QML / MVVM 风格二次抽象
+* 自动化 GUI 测试框架
+
+### 8.4 功能对齐方案
+
+本次 GUI 必须实现与控制台版本**功能等价**，至少覆盖以下内容。
+
+#### 8.4.1 `AdminWindow`
+
+`AdminWindow` 至少包含 6 个页签：
+
+* **学生管理**
+  * 列表查看全部学生
+  * 按学号查看单个学生
+  * 新增学生
+  * 编辑学生
+  * 级联删除学生（同步删除相关成绩与学生账号）
+* **课程管理**
+  * 列表查看全部课程
+  * 按课程号查看单个课程
+  * 新增课程
+  * 编辑课程
+  * 级联删除课程（同步删除相关成绩）
+* **成绩管理**
+  * 查看全部成绩
+  * 按学生查询成绩
+  * 按课程查询成绩
+  * 录入或更新单条成绩
+  * 删除单条成绩
+* **统计分析**
+  * 课程统计
+  * 课程排名
+  * 学生 GPA 查询
+* **报告导出**
+  * 生成 `warning_report.txt`
+  * 导出课程统计 CSV
+  * 导出课程排名 CSV
+* **账户**
+  * 修改密码
+  * 退出登录
+
+#### 8.4.2 `TeacherWindow`
+
+`TeacherWindow` 至少包含 4 个页签：
+
+* 我的课程
+* 我的课程成绩
+* 我的课程统计
+* 账户
+
+教师侧的特殊要求：
+
+* 所有写操作与统计入口都必须先走 GUI 白名单课程选择
+* GUI 中只显示 `teacherId == session.ownerId` 的课程
+* 即使 GUI 漏判，`service` 层原有硬拒绝规则也必须继续保留
+
+#### 8.4.3 `StudentWindow`
+
+`StudentWindow` 至少包含 4 个页签：
+
+* 我的资料
+* 我的成绩
+* 我的 GPA
+* 账户
+
+学生侧要求保持“只读自己”语义，与 CLI 保持一致。
+
+#### 8.4.4 统一行为约束
+
+* GUI 文案统一使用中文
+* 内部类名、接口名、字段名继续保持英文
+* 成功、失败、校验错误统一通过 `QMessageBox` 呈现
+* 底层继续抛出现有异常类型，不重写异常体系
+* 报告与 CSV 导出路径保持不变：
+  * `data/warning_report.txt`
+  * `data/course_stats_<courseId>.csv`
+  * `data/ranking_<courseId>.csv`
+
+### 8.5 接口与类型变更边界
+
+本次 Qt 分支允许新增以下公开类型，但不得改变既有业务语义：
+
+* `AppContext`
+* `LoginDialog`
+* `AdminWindow`
+* `TeacherWindow`
+* `StudentWindow`
+* `StudentEditDialog`
+* `CourseEditDialog`
+* `ScoreEditDialog`
+* `ChangePasswordDialog`
+
+同时允许 CMake 新增公开构建目标：
+
+* `edusys_gui`
+
+以下公共边界明确要求**不修改业务语义**：
+
+* `AuthService`
+* `StudentService`
+* `CourseService`
+* `ScoreService`
+* `StatsService`
+* `BinaryRepository<T>` 与 5 个具体仓储
+* `Session`
+* `ReportExporter`
+* `.dat` 文件格式
+* 日志路径
+* CSV 路径
+* 统计口径
+* 权限矩阵
+
+### 8.6 测试与验收计划
+
+#### 8.6.1 构建验证
+
+* CMake 能同时构建 `edusys` 与 `edusys_gui`
+* `edusys_gui` 在未 seed 与已 seed 两种状态下均可正常启动
+
+#### 8.6.2 回归验证
+
+* 现有 `edusys --self-test` 必须保持全绿
+* `tools/corrupt_check.bat` 必须继续通过
+
+#### 8.6.3 GUI 手工验收
+
+* 登录成功、错密码、3 次失败退出、取消退出
+* Admin：学生/课程/成绩三大 CRUD 全链路可用
+* Admin：课程统计、排名、学生 GPA、预警报告、CSV 导出全部可用
+* Teacher：只能看到和操作自己的课程，越权课程在 GUI 不可选，绕过 GUI 仍由 Service 拒绝
+* Student：只能查看自己的资料/成绩/GPA，并能修改密码
+* 登出后返回登录框
+* 重启 GUI 后数据仍从原有 `.dat` 正确加载
+
+#### 8.6.4 一致性验收
+
+* GUI 修改数据后，CLI 读取结果与 GUI 展示一致
+* GUI 导出的 `.txt / .csv` 与 CLI 版本路径和内容语义一致
+
+### 8.7 实施假设与范围控制
+
+为避免 Qt 分支范围失控，明确采用以下假设：
+
+* 本次 Qt 计划是“完整业务 GUI 化”，不是只做演示原型
+* GUI 与 CLI 在 `introduceQt` 分支长期共存，CLI 仍作为自动化自检与损坏恢复的基准入口
+* v1 不引入 `Qt Test`，不做自动化 GUI 测试框架，只做 CLI 自动回归 + GUI 手工验收
+* v1 不引入数据库、网络同步、云端部署、QML、主题系统或复杂视觉重设计，优先保证功能对齐与工程稳定
+* 本章节作为新增的**第 8 章**存在，不改写前面已确认的课程首版交付结论

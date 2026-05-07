@@ -1,0 +1,3 @@
+D:/Student_Score_Management_System/build-qt-verify/CMakeFiles/CMakeScratch/TryCompile-6ivcuo/CMakeFiles/cmTC_7470d.dir
+D:/Student_Score_Management_System/build-qt-verify/CMakeFiles/CMakeScratch/TryCompile-6ivcuo/CMakeFiles/edit_cache.dir
+D:/Student_Score_Management_System/build-qt-verify/CMakeFiles/CMakeScratch/TryCompile-6ivcuo/CMakeFiles/rebuild_cache.dir

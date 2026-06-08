@@ -59,7 +59,7 @@ StudentWindow::StudentWindow(AppContext& appContext, Session session, QWidget* p
 
     setCentralWidget(tabs);
     statusBar()->showMessage(
-        QString::fromUtf8(u8"当前学生：%1。学生端全部 4 个页签已接入真实业务层。")
+        QString::fromUtf8(u8"当前学生：%1")
             .arg(QString::fromStdString(session_.getUsername())));
 }
 

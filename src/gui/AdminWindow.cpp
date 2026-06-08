@@ -110,7 +110,7 @@ AdminWindow::AdminWindow(AppContext& appContext, Session session, QWidget* paren
 
     setCentralWidget(tabs);
     statusBar()->showMessage(
-        QString::fromUtf8(u8"当前用户：%1。管理员端全部 6 个页签已接入真实业务层。")
+        QString::fromUtf8(u8"当前用户：%1")
             .arg(QString::fromStdString(session_.getUsername())));
 }
 
@@ -120,7 +120,7 @@ QWidget* AdminWindow::createStudentPage() {
 
     auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>学生管理</b>"), page);
     auto* introLabel = new QLabel(
-        QString::fromUtf8(u8"本页已经接入真实业务层，可执行学生列表、按学号查看、新增、编辑和级联删除。"),
+        QString::fromUtf8(u8"可查看学生列表、按学号查询、新增、编辑和删除学生。"),
         page);
     introLabel->setWordWrap(true);
 
@@ -318,7 +318,7 @@ QWidget* AdminWindow::createCoursePage() {
 
     auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>课程管理</b>"), page);
     auto* introLabel = new QLabel(
-        QString::fromUtf8(u8"本页已经接入真实业务层，可执行课程列表、按课程号查看、新增、编辑和级联删除。"),
+        QString::fromUtf8(u8"可查看课程列表、按课程号查询、新增、编辑和删除课程。"),
         page);
     introLabel->setWordWrap(true);
 
@@ -511,7 +511,7 @@ QWidget* AdminWindow::createScorePage() {
 
     auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>成绩管理</b>"), page);
     auto* introLabel = new QLabel(
-        QString::fromUtf8(u8"本页已经接入真实业务层，可执行成绩总览、按学生查、按课程查、录入更新和删除单条成绩。"),
+        QString::fromUtf8(u8"可查看成绩总览、按学生查询、按课程查询、录入更新和删除单条成绩。"),
         page);
     introLabel->setWordWrap(true);
 

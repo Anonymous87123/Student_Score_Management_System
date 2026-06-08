@@ -169,6 +169,7 @@ cmake --build build-qt-introduceQt --target edusys edusys_gui
 - `build.bat` 只负责 CLI，不负责 Qt；想运行 GUI 不要只执行 `build.bat`。
 - `edusys_gui.exe` 的启动入口是 `src/app/gui_main.cpp`，不会复用 CLI 的 `src/app/main.cpp`。
 - 两条入口共享 `AppContext`、服务层、仓储层和报表层。`AppContext` 是 CLI 和 GUI 共用的运行时装配入口。
+- 当前 `CMakeLists.txt` 已经给 `edusys_gui` 加了 `Qt6::CoreTools` 和构建后 `windeployqt`，所以用 CMake/Ninja 构建完成后，通常不需要手工拷贝 Qt 运行时 DLL。
 
 如果使用当前机器上已经验证过的 Qt MinGW 路径，可以使用下面的完整命令。
 
@@ -281,6 +282,104 @@ Qt GUI 里也有两种退出：
 | `Teacher` | 只查看并维护自己授课课程的成绩、查看自己课程的统计、修改自己的密码 | 不能改学生与课程基础数据，不能动别人的课程 |
 | `Student` | 只查看自己的资料、成绩、GPA，修改自己的密码 | 不能写成绩，不能看别人数据 |
 
+### 2.2.0 功能树总图
+
+先看树，再看后面的入口索引和代码链。这里的“叶子节点”指的是用户在菜单里能直接选到、或在窗口里能直接点到的一步。
+
+```text
+EduSys 功能树
+├─ CLI / edusys.exe
+│  ├─ 登录 / 会话
+│  │  ├─ 输入用户名密码登录
+│  │  ├─ 用户名留空退出
+│  │  └─ 连续 3 次失败退出
+│  ├─ Admin
+│  │  ├─ 学生管理
+│  │  │  ├─ 列表
+│  │  │  ├─ 按学号查看
+│  │  │  ├─ 新增
+│  │  │  ├─ 编辑
+│  │  │  └─ 删除（级联清理成绩和账号）
+│  │  ├─ 课程管理
+│  │  │  ├─ 列表
+│  │  │  ├─ 按课程号查看
+│  │  │  ├─ 新增
+│  │  │  ├─ 编辑
+│  │  │  └─ 删除（级联清理成绩）
+│  │  ├─ 成绩管理
+│  │  │  ├─ 全部列表
+│  │  │  ├─ 按学生查
+│  │  │  ├─ 按课程查
+│  │  │  ├─ 录入 / 更新
+│  │  │  └─ 删除单条
+│  │  ├─ 统计分析
+│  │  │  ├─ 课程统计
+│  │  │  ├─ 课程排名
+│  │  │  └─ 学生 GPA
+│  │  ├─ 预警报告
+│  │  ├─ CSV 导出
+│  │  ├─ 修改密码
+│  │  └─ 退出登录
+│  ├─ Teacher
+│  │  ├─ 我的课程
+│  │  ├─ 我的课程成绩
+│  │  ├─ 录入 / 更新本课成绩
+│  │  ├─ 删除本课成绩
+│  │  ├─ 我的课程统计
+│  │  ├─ 修改密码
+│  │  └─ 退出登录
+│  ├─ Student
+│  │  ├─ 我的资料
+│  │  ├─ 我的成绩
+│  │  ├─ 我的 GPA
+│  │  ├─ 修改密码
+│  │  └─ 退出登录
+│  └─ System
+│     ├─ --self-test
+│     ├─ 空用户名退出
+│     ├─ 连续 3 次失败退出
+│     └─ tools/corrupt_check.bat（脚本，不是 edusys.exe 菜单项）
+├─ Qt GUI / edusys_gui.exe
+│  ├─ LoginDialog
+│  │  ├─ 登录
+│  │  ├─ 空用户名退出
+│  │  └─ 连续 3 次失败退出
+│  ├─ AdminWindow
+│  │  ├─ 学生管理页签
+│  │  ├─ 课程管理页签
+│  │  ├─ 成绩管理页签
+│  │  ├─ 统计分析页签
+│  │  ├─ 报告导出页签
+│  │  └─ 账户页签
+│  ├─ TeacherWindow
+│  │  ├─ 我的课程页签
+│  │  ├─ 我的课程成绩页签
+│  │  ├─ 我的课程统计页签
+│  │  └─ 账户页签
+│  ├─ StudentWindow
+│  │  ├─ 我的资料页签
+│  │  ├─ 我的成绩页签
+│  │  ├─ 我的 GPA 页签
+│  │  └─ 账户页签
+│  └─ 表单对话框
+│     ├─ StudentEditDialog
+│     ├─ CourseEditDialog
+│     ├─ ScoreEditDialog
+│     └─ ChangePasswordDialog
+├─ 共享核心
+│  ├─ AppContext
+│  ├─ Session
+│  ├─ Person -> Student / Teacher
+│  ├─ model
+│  ├─ storage
+│  ├─ service
+│  └─ report
+└─ 验证入口
+   ├─ edusys.exe --self-test
+   ├─ tools/corrupt_check.bat
+   └─ docs/cli-demo-guide.md / docs/test-cases.md
+```
+
 ### 2.2 CLI 菜单与 Qt 窗口总览
 
 CLI 和 Qt GUI 是两条并列入口。CLI 入口是 `edusys.exe`，用户通过键盘输入菜单编号；Qt 入口是 `edusys_gui.exe`，用户通过登录框、页签、表格、按钮和弹窗操作。界面代码不同，业务服务代码相同，数据文件路径规则相同。也就是说，CLI 和 GUI 不是互相调用，而是分别把用户操作交给同一套服务层处理。
@@ -360,32 +459,32 @@ StudentWindow
 
 还要注意一个运行目录细节：代码里的 `data/...` 是相对当前运行目录的路径。通常在项目根目录启动两个程序时，CLI 和 GUI 会读写同一个 `data/` 目录；如果从不同工作目录启动，它们可能各自读写不同位置下的 `data/`。为了减少混乱，建议统一从项目根目录启动 `edusys.exe` 和 `edusys_gui.exe`。
 
-### 2.2.1 CLI 功能到代码的总索引
+### 2.2.1 CLI 叶子节点到代码的总索引
 
 如果只想快速对照“菜单里选什么、代码走哪里、数据写哪里”，可以先看这张表。`docs/cli-demo-guide.md` 的章节号是课堂手工演示参考，不是程序里的代码行号。
 如果你只是要运行或演示项目，先看前两列；如果你要读代码或答辩解释实现，再看后面的 View、Service、数据落点和验证方式。
 
 | 角色/入口 | 菜单功能 | View 入口 | Service / Report 入口 | 主要数据落点 | 演示/验证方式 |
 | --- | --- | --- | --- | --- | --- |
-| 登录界面 | 用户名密码登录、空用户名退出、3 次失败退出 | `runInteractiveLoop()` | `AuthService::authenticate()` | `data/users.dat`、`data/app.log` | `cli-demo-guide` 第 3、9 节；`--self-test` A 组 |
-| Admin 1 | 学生列表、按学号查、新增、编辑、删除学生 | `AdminMenu::studentMenu()` | `StudentService::listAll/findById/create/update/remove()` | `data/students.dat`、删除时还影响 `scores.dat` 和 `users.dat` | `cli-demo-guide` 第 4.1-4.6 节；`--self-test` B/C/D 组 |
-| Admin 2 | 课程列表、按课程号查、新增、编辑、删除课程 | `AdminMenu::courseMenu()` | `CourseService::listAll/findById/create/update/remove()` | `data/courses.dat`、删除时还影响 `scores.dat` | `cli-demo-guide` 第 4.7-4.12 节；`--self-test` B/C 组 |
-| Admin 3 | 成绩列表、按学生查、按课程查、录入/更新、删除单条成绩 | `AdminMenu::scoreMenu()` | `ScoreService::listAll/findByStudent/findByCourse/upsert/remove()` | `data/scores.dat` | `cli-demo-guide` 第 4.13-4.19 节；`--self-test` B/E 组 |
-| Admin 4 | 课程统计、课程排名、学生 GPA | `AdminMenu::statsMenu()` | `StatsService::computeCourseStats/rankByCourse/computeGpaFor()` | 只读 `students.dat/courses.dat/scores.dat` | `cli-demo-guide` 第 4.20-4.23 节 |
-| Admin 5 | 生成学业预警报告 | `AdminMenu::generateWarningReport()` | `ReportExporter::exportWarningReport()` | `data/warning_report.txt` | `cli-demo-guide` 第 4.24 节 |
-| Admin 6 | 修改管理员自己的密码 | `AdminMenu::changePassword()` | `AuthService::changePassword()` | `data/users.dat` | `cli-demo-guide` 第 7 节；`--self-test` A 组覆盖失败边界 |
-| Admin 7 | 导出课程统计 CSV 和排名 CSV | `AdminMenu::exportCsv()` | `ReportExporter::exportCourseStatsCsv/exportRankingCsv()` | `data/course_stats_<courseId>.csv`、`data/ranking_<courseId>.csv` | `cli-demo-guide` 第 4.25 节 |
-| Teacher 1 | 查看我的课程 | `TeacherMenu::listMyCourses()` | `CourseService::listAll()` 后按 `teacherId` 过滤 | 只读 `data/courses.dat` | `cli-demo-guide` 第 5.2 节 |
-| Teacher 2-5 | 查看本课程成绩、录入/更新、删除、统计 | `TeacherMenu::viewMyScores/upsertScore/deleteScore/courseStats()` | `ScoreService` 和 `StatsService`，先经 `pickOwnCourseId()` 选择本人课程 | 读写 `data/scores.dat`，统计只读 | `cli-demo-guide` 第 5.3-5.7 节；`--self-test` E 组 |
-| Teacher 6 | 修改教师自己的密码 | `TeacherMenu::changePassword()` | `AuthService::changePassword()` | `data/users.dat` | `cli-demo-guide` 第 7 节说明入口，按需手工演示 |
-| Student 1-3 | 查看我的资料、我的成绩、我的 GPA | `StudentMenu::viewProfile/viewMyScores/viewMyGpa()` | `StudentService`、`ScoreService`、`StatsService` | 只读 `students.dat/scores.dat/courses.dat` | `cli-demo-guide` 第 6.2-6.4 节 |
-| Student 4 | 修改学生自己的密码 | `StudentMenu::changePassword()` | `AuthService::changePassword()` | `data/users.dat` | `cli-demo-guide` 第 7 节说明入口，按需手工演示 |
+| 登录/会话 | 用户名密码登录、空用户名退出、3 次失败退出 | `runInteractiveLoop()` | `AuthService::authenticate()` | `data/users.dat`、`data/app.log` | `cli-demo-guide` 第 3、9 节；`--self-test` A 组 |
+| Admin / 学生管理叶子组 | 列表、按学号查、新增、编辑、删除学生 | `AdminMenu::studentMenu()` | `StudentService::listAll/findById/create/update/remove()` | `data/students.dat`、删除时还影响 `scores.dat` 和 `users.dat` | `cli-demo-guide` 第 4.1-4.6 节；`--self-test` B/C/D 组 |
+| Admin / 课程管理叶子组 | 列表、按课程号查、新增、编辑、删除课程 | `AdminMenu::courseMenu()` | `CourseService::listAll/findById/create/update/remove()` | `data/courses.dat`、删除时还影响 `scores.dat` | `cli-demo-guide` 第 4.7-4.12 节；`--self-test` B/C 组 |
+| Admin / 成绩管理叶子组 | 成绩列表、按学生查、按课程查、录入/更新、删除单条成绩 | `AdminMenu::scoreMenu()` | `ScoreService::listAll/findByStudent/findByCourse/upsert/remove()` | `data/scores.dat` | `cli-demo-guide` 第 4.13-4.19 节；`--self-test` B/E 组 |
+| Admin / 统计分析叶子组 | 课程统计、课程排名、学生 GPA | `AdminMenu::statsMenu()` | `StatsService::computeCourseStats/rankByCourse/computeGpaFor()` | 只读 `students.dat/courses.dat/scores.dat` | `cli-demo-guide` 第 4.20-4.23 节 |
+| Admin / 预警报告 | 生成学业预警报告 | `AdminMenu::generateWarningReport()` | `ReportExporter::exportWarningReport()` | `data/warning_report.txt` | `cli-demo-guide` 第 4.24 节 |
+| Admin / 修改密码 | 修改管理员自己的密码 | `AdminMenu::changePassword()` | `AuthService::changePassword()` | `data/users.dat` | `cli-demo-guide` 第 7 节；`--self-test` A 组覆盖失败边界 |
+| Admin / CSV 导出 | 导出课程统计 CSV 和排名 CSV | `AdminMenu::exportCsv()` | `ReportExporter::exportCourseStatsCsv/exportRankingCsv()` | `data/course_stats_<courseId>.csv`、`data/ranking_<courseId>.csv` | `cli-demo-guide` 第 4.25 节 |
+| Teacher / 我的课程 | 查看我的课程 | `TeacherMenu::listMyCourses()` | `CourseService::listAll()` 后按 `teacherId` 过滤 | 只读 `data/courses.dat` | `cli-demo-guide` 第 5.2 节 |
+| Teacher / 我的课程成绩链 | 查看本课程成绩、录入/更新、删除、统计 | `TeacherMenu::viewMyScores/upsertScore/deleteScore/courseStats()` | `ScoreService` 和 `StatsService`，先经 `pickOwnCourseId()` 选择本人课程 | 读写 `data/scores.dat`，统计只读 | `cli-demo-guide` 第 5.3-5.7 节；`--self-test` E 组 |
+| Teacher / 修改密码 | 修改教师自己的密码 | `TeacherMenu::changePassword()` | `AuthService::changePassword()` | `data/users.dat` | `cli-demo-guide` 第 7 节说明入口，按需手工演示 |
+| Student / 资料成绩GPA | 查看我的资料、我的成绩、我的 GPA | `StudentMenu::viewProfile/viewMyScores/viewMyGpa()` | `StudentService`、`ScoreService`、`StatsService` | 只读 `students.dat/scores.dat/courses.dat` | `cli-demo-guide` 第 6.2-6.4 节 |
+| Student / 修改密码 | 修改学生自己的密码 | `StudentMenu::changePassword()` | `AuthService::changePassword()` | `data/users.dat` | `cli-demo-guide` 第 7 节说明入口，按需手工演示 |
 | `--self-test` | 自动回归检查，不进入菜单 | `main()` 参数分支 | 多个 Service 直接被调用 | 可能写日志；首次空数据会自动写入默认示例数据 | `README` 第 13.1 节、`docs/test-cases.md` |
 | `tools/corrupt_check.bat` | 文件损坏恢复检查 | 批处理脚本 | 外部制造损坏后运行 `edusys.exe --self-test` | 临时备份/恢复 `data/*.dat`，输出到 `data/__corrupt_out__/` | `README` 第 13.2 节、`docs/test-cases.md` F 组 |
 
 这张表也说明了一个边界：`docs/cli-demo-guide.md` 的主线会实际演示大部分 CLI 操作，但不是每个失败分支都逐项手打；失败边界主要由 `--self-test`、`corrupt_check.bat` 和演示文档的可选补充部分覆盖。
 
-### 2.2.2 Qt GUI 功能到代码的总索引
+### 2.2.2 Qt GUI 叶子节点到代码的总索引
 
 下面这张表只讲 Qt GUI，不讲 CLI 菜单。它的作用是把 `edusys_gui.exe` 里每一个主要窗口功能和真实代码连起来，说明 GUI 操作会经过同一套服务层，并在相同运行目录下读写同一批真实数据文件。
 
@@ -397,22 +496,22 @@ StudentWindow
 | GUI 登录 | 用户名密码登录、空用户名退出、点击退出、连续 3 次失败退出 | `LoginDialog::tryLogin()` | `AuthService::authenticate()` | 读取 `data/users.dat`，写 `data/app.log` | 行为对齐 CLI 登录循环，只是错误提示换成 `QMessageBox` |
 | 角色分发 | 按 `Session.role` 打开对应主窗口 | `createRoleWindow()` | 使用 `Session` 判断 `Admin/Teacher/Student` | 不直接落盘 | 和 CLI 的角色分发规则相同，但创建的是 Qt 主窗口 |
 | AdminWindow | 6 个页签的主窗口容器 | `AdminWindow::AdminWindow()` | 后续页签分别调用各自服务 | 按具体功能落盘 | 对应 CLI 的 Admin 菜单功能集合 |
-| Admin 学生管理 | 列表、按学号查看、新增、编辑、级联删除 | `createStudentPage()`、`refreshStudentTable()`、`showStudentById()`、`createStudent()`、`editSelectedStudent()`、`removeSelectedStudent()` | `StudentService::listAll/findById/create/update/remove()` | `students.dat`；删除学生时还影响 `scores.dat`、`users.dat` | 功能等价于 CLI `AdminMenu::studentMenu()` |
-| Admin 课程管理 | 列表、按课程号查看、新增、编辑、级联删除 | `createCoursePage()`、`refreshCourseTable()`、`showCourseById()`、`createCourse()`、`editSelectedCourse()`、`removeSelectedCourse()` | `CourseService::listAll/findById/create/update/remove()` | `courses.dat`；删除课程时还影响 `scores.dat` | 功能等价于 CLI `AdminMenu::courseMenu()` |
-| Admin 成绩管理 | 全部成绩、按学生查、按课程查、录入/更新、编辑、删除单条 | `createScorePage()`、`refreshScoreTable()`、`showScoresByStudent()`、`showScoresByCourse()`、`createScore()`、`editSelectedScore()`、`removeSelectedScore()` | `ScoreService::listAll/findByStudent/findByCourse/upsert/remove()` | `scores.dat` | 功能等价于 CLI `AdminMenu::scoreMenu()` |
-| Admin 统计分析 | 课程统计、课程排名、学生 GPA | `createStatsPage()`、`queryCourseStats()`、`queryCourseRanking()`、`queryStudentGpa()` | `StatsService::computeCourseStats/rankByCourse/computeGpaFor()` | 只读 `students.dat/courses.dat/scores.dat` | 功能等价于 CLI `AdminMenu::statsMenu()` |
-| Admin 报告导出 | 学业预警报告、课程统计 CSV、课程排名 CSV | `createReportPage()`、`exportWarningReport()`、`exportCourseStatsCsv()`、`exportRankingCsv()` | `ReportExporter::exportWarningReport/exportCourseStatsCsv/exportRankingCsv()` | `warning_report.txt`、`course_stats_<courseId>.csv`、`ranking_<courseId>.csv` | 导出路径和 CLI 保持一致 |
-| Admin 账户 | 修改密码、退出登录 | `createAccountPage()`、`ChangePasswordDialog` | `AuthService::changePassword()` | `users.dat` | 退出登录是关闭主窗口，`gui_main.cpp` 再回到登录框 |
+| Admin / 学生管理页签 | 列表、按学号查看、新增、编辑、级联删除 | `createStudentPage()`、`refreshStudentTable()`、`showStudentById()`、`createStudent()`、`editSelectedStudent()`、`removeSelectedStudent()` | `StudentService::listAll/findById/create/update/remove()` | `students.dat`；删除学生时还影响 `scores.dat`、`users.dat` | 功能等价于 CLI `AdminMenu::studentMenu()` |
+| Admin / 课程管理页签 | 列表、按课程号查看、新增、编辑、级联删除 | `createCoursePage()`、`refreshCourseTable()`、`showCourseById()`、`createCourse()`、`editSelectedCourse()`、`removeSelectedCourse()` | `CourseService::listAll/findById/create/update/remove()` | `courses.dat`；删除课程时还影响 `scores.dat` | 功能等价于 CLI `AdminMenu::courseMenu()` |
+| Admin / 成绩管理页签 | 全部成绩、按学生查、按课程查、录入/更新、编辑、删除单条 | `createScorePage()`、`refreshScoreTable()`、`showScoresByStudent()`、`showScoresByCourse()`、`createScore()`、`editSelectedScore()`、`removeSelectedScore()` | `ScoreService::listAll/findByStudent/findByCourse/upsert/remove()` | `scores.dat` | 功能等价于 CLI `AdminMenu::scoreMenu()` |
+| Admin / 统计分析页签 | 课程统计、课程排名、学生 GPA | `createStatsPage()`、`queryCourseStats()`、`queryCourseRanking()`、`queryStudentGpa()` | `StatsService::computeCourseStats/rankByCourse/computeGpaFor()` | 只读 `students.dat/courses.dat/scores.dat` | 功能等价于 CLI `AdminMenu::statsMenu()` |
+| Admin / 报告导出页签 | 学业预警报告、课程统计 CSV、课程排名 CSV | `createReportPage()`、`exportWarningReport()`、`exportCourseStatsCsv()`、`exportRankingCsv()` | `ReportExporter::exportWarningReport/exportCourseStatsCsv/exportRankingCsv()` | `warning_report.txt`、`course_stats_<courseId>.csv`、`ranking_<courseId>.csv` | 导出路径和 CLI 保持一致 |
+| Admin / 账户页签 | 修改密码、退出登录 | `createAccountPage()`、`ChangePasswordDialog` | `AuthService::changePassword()` | `users.dat` | 退出登录是关闭主窗口，`gui_main.cpp` 再回到登录框 |
 | TeacherWindow | 4 个页签的教师窗口容器 | `TeacherWindow::TeacherWindow()` | 后续页签分别调用课程、成绩、统计、认证服务 | 按具体功能落盘 | 对应 CLI 的 Teacher 菜单功能集合 |
-| Teacher 我的课程 | 查看本人课程 | `createMyCoursesPage()`、`refreshMyCourses()`、`myCourses()` | `CourseService::listAll()` | 只读 `courses.dat` | Service 已按教师 `ownerId` 过滤；GUI 表格只展示本人课程 |
-| Teacher 我的课程成绩 | 选择本人课程、加载成绩、录入/编辑/删除成绩 | `createMyScoresPage()`、`refreshMyScores()`、`createScore()`、`editSelectedScore()`、`removeSelectedScore()` | `ScoreService::findByCourse/upsert/remove()` | `scores.dat` | GUI 先用下拉框限制课程；Service 仍会拒绝越权课程 |
-| Teacher 我的课程统计 | 选择本人课程、课程统计、课程排名 | `createMyStatsPage()`、`queryCourseStats()`、`queryCourseRanking()` | `StatsService::computeCourseStats/rankByCourse()` | 只读 `courses.dat/scores.dat/students.dat` | 教师只能统计自己的课，规则与 CLI 一致 |
-| Teacher 账户 | 修改密码、退出登录 | `createAccountPage()`、`ChangePasswordDialog` | `AuthService::changePassword()` | `users.dat` | 退出后回到 GUI 登录框 |
+| Teacher / 我的课程页签 | 查看本人课程 | `createMyCoursesPage()`、`refreshMyCourses()`、`myCourses()` | `CourseService::listAll()` | 只读 `courses.dat` | Service 已按教师 `ownerId` 过滤；GUI 表格只展示本人课程 |
+| Teacher / 我的课程成绩页签 | 选择本人课程、加载成绩、录入/编辑/删除成绩 | `createMyScoresPage()`、`refreshMyScores()`、`createScore()`、`editSelectedScore()`、`removeSelectedScore()` | `ScoreService::findByCourse/upsert/remove()` | `scores.dat` | GUI 先用下拉框限制课程；Service 仍会拒绝越权课程 |
+| Teacher / 我的课程统计页签 | 选择本人课程、课程统计、课程排名 | `createMyStatsPage()`、`queryCourseStats()`、`queryCourseRanking()` | `StatsService::computeCourseStats/rankByCourse()` | 只读 `courses.dat/scores.dat/students.dat` | 教师只能统计自己的课，规则与 CLI 一致 |
+| Teacher / 账户页签 | 修改密码、退出登录 | `createAccountPage()`、`ChangePasswordDialog` | `AuthService::changePassword()` | `users.dat` | 退出后回到 GUI 登录框 |
 | StudentWindow | 4 个页签的学生窗口容器 | `StudentWindow::StudentWindow()` | 后续页签分别调用学生、成绩、统计、认证服务 | 按具体功能落盘 | 对应 CLI 的 Student 菜单功能集合 |
-| Student 我的资料 | 查看自己的学生档案 | `createProfilePage()` | `StudentService::findById(session_, session_.getOwnerId())` | 只读 `students.dat` | 和 CLI 一样只能看自己 |
-| Student 我的成绩 | 查看自己的成绩列表 | `createMyScoresPage()`、`refreshMyScores()` | `ScoreService::findByStudent(session_, session_.getOwnerId())` | 只读 `scores.dat` | 和 CLI 一样只能看自己 |
-| Student 我的 GPA | 查看自己的 GPA | `createMyGpaPage()`、`refreshMyGpa()` | `StatsService::computeGpaFor(session_, session_.getOwnerId())` | 只读 `students.dat/courses.dat/scores.dat` | 和 CLI 一样只能算自己 |
-| Student 账户 | 修改密码、退出登录 | `createAccountPage()`、`ChangePasswordDialog` | `AuthService::changePassword()` | `users.dat` | 退出后回到 GUI 登录框 |
+| Student / 我的资料页签 | 查看自己的学生档案 | `createProfilePage()` | `StudentService::findById(session_, session_.getOwnerId())` | 只读 `students.dat` | 和 CLI 一样只能看自己 |
+| Student / 我的成绩页签 | 查看自己的成绩列表 | `createMyScoresPage()`、`refreshMyScores()` | `ScoreService::findByStudent(session_, session_.getOwnerId())` | 只读 `scores.dat` | 和 CLI 一样只能看自己 |
+| Student / 我的 GPA 页签 | 查看自己的 GPA | `createMyGpaPage()`、`refreshMyGpa()` | `StatsService::computeGpaFor(session_, session_.getOwnerId())` | 只读 `students.dat/courses.dat/scores.dat` | 和 CLI 一样只能算自己 |
+| Student / 账户页签 | 修改密码、退出登录 | `createAccountPage()`、`ChangePasswordDialog` | `AuthService::changePassword()` | `users.dat` | 退出后回到 GUI 登录框 |
 | GUI 表单对话框 | 新增/编辑学生、课程、成绩、修改密码 | `StudentEditDialog`、`CourseEditDialog`、`ScoreEditDialog`、`ChangePasswordDialog` | 学生/课程/成绩对话框收集字段后由窗口调用 Service；改密码对话框内部调用 `AuthService::changePassword()` | 按被调用 Service 决定 | 对话框不直接写 `.dat`，复杂规则仍由 Service 处理 |
 | CLI 保留入口 | 自动自检、坏文件脚本、手工 CLI 演示 | 不属于 `src/gui/` | `--self-test`、`tools/corrupt_check.bat`、`docs/cli-demo-guide.md` | 按各自入口决定 | 这些不是 GUI 菜单项，仍由 CLI/脚本维护 |
 
@@ -1211,6 +1310,21 @@ while (true) {
 - 在相同运行目录下启动时，GUI 和 CLI 修改的是同一批 `data/*.dat` 文件，所以 GUI 改完后 CLI 能读到，CLI 改完后 GUI 也能读到。
 - `createRoleWindow(...).release()` 把窗口指针交给 Qt 管理；`Qt::WA_DeleteOnClose` 表示窗口关闭时自动删除；`destroyed` 信号触发局部 `QEventLoop` 退出，所以这里不是让窗口对象无人管理。
 
+### 2.15 这门作业训练到的 C++ 内容
+
+这一节不是再讲新功能，而是把“这门课要学的东西”直接对到代码里。老师如果问“你有没有真的用到类、继承、模板、文件读写”，可以先看这里，再回去看后面的具体实现。
+
+| 训练内容 | 代码里体现在哪里 | 读的时候看什么 |
+| --- | --- | --- |
+| 类与对象 | `include/EduSys/model/*.hpp`、`src/model/*.cpp`，还有 `AppContext`、`Session`、各个 `Service` | 看对象字段、构造函数、getter/setter、对象之间怎么传引用 |
+| 继承与多态 | `Person -> Student / Teacher`，`BaseMenu -> AdminMenu / TeacherMenu / StudentMenu`，`QMainWindow -> AdminWindow / TeacherWindow / StudentWindow`，`QDialog -> LoginDialog / ChangePasswordDialog / EditDialog` | 看 `virtual`、纯虚函数、重写函数、派生类怎么接管入口 |
+| 模板编程 | `BinaryRepository<T>` | 看 `loadAll()` 和 `saveAll()` 怎么通过 `T::readFrom()` / `item.writeTo()` 适配不同实体 |
+| 文件读写 | `BinaryReader`、`BinaryWriter`、`BinaryRepository<T>`、`ReportExporter`、`model/*::readFrom/writeTo` | 看 `.dat`、`.txt`、`.csv` 是怎么被逐字段写入和读回的 |
+| 分层设计 | `src/app/`、`src/view/`、`src/gui/`、`src/service/`、`src/storage/`、`src/report/` | 看入口层、业务层、存储层、导出层怎么分开 |
+| 权限控制 | `AuthService`、`StudentService`、`CourseService`、`ScoreService`、`StatsService` | 看 `Session` 怎么决定谁能看、谁能改、谁会被拒绝 |
+
+如果要把这门作业的技术点串成一句话，可以这样理解：`model` 负责对象本身，`storage` 负责把对象和文件对应起来，`service` 负责业务规则，`view/gui` 负责输入输出，`AppContext` 把这些东西装配在一起。这样分层之后，CLI 和 Qt 只是换了界面，不是换了业务。
+
 如果老师问“Qt 版本是不是另写了一套演示数据”，可以按代码说明：`gui_main.cpp` 和 `main.cpp` 都创建同一个 `AppContext`，而 `AppContext` 装配的是同一批仓储和服务。通常从项目根目录启动时，两者最终读写同一个 `data/` 目录；如果人为从不同工作目录启动，就要注意 `data/` 会按各自运行目录解析。
 
 ## 3. 文档应该怎么读
@@ -1896,7 +2010,7 @@ GUI 侧：
 
 CLI 备用构建可以走 `build.bat`。Qt GUI 不走 `build.bat`，而是由 CMake 目标 `edusys_gui` 构建。
 
-这样分开是因为 Qt 需要 `find_package(Qt6 REQUIRED COMPONENTS Widgets)`、`Qt6::Widgets` 链接和 Qt 运行时环境，强行塞进 `build.bat` 会让原本简单的 CLI 构建路径变复杂。
+这样分开是因为 Qt 需要 `find_package(Qt6 REQUIRED COMPONENTS Widgets CoreTools)`、`Qt6::Widgets` 链接、Qt 运行时环境，以及构建后的 `windeployqt` 部署步骤；强行塞进 `build.bat` 会让原本简单的 CLI 构建路径变复杂。
 
 `edusys_gui` 目标受 `EDUSYS_BUILD_GUI` 开关控制，默认是 `ON`。普通构建不用管这个开关；如果配置 CMake 时手动传过 `-DEDUSYS_BUILD_GUI=OFF`，就不会生成 GUI 目标。
 
@@ -1954,14 +2068,27 @@ set(EDUSYS_GUI_SOURCES
 )
 
 if(EDUSYS_BUILD_GUI)
-    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+    find_package(Qt6 REQUIRED COMPONENTS Widgets CoreTools)
 
     add_executable(edusys_gui WIN32 ${EDUSYS_GUI_SOURCES})
     target_link_libraries(edusys_gui PRIVATE edusys_core Qt6::Widgets)
+    set_target_properties(edusys_gui PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    )
+
+    add_custom_command(TARGET edusys_gui POST_BUILD
+        COMMAND $<TARGET_FILE:Qt6::windeployqt>
+                --dir $<TARGET_FILE_DIR:edusys_gui>
+                --compiler-runtime
+                --no-translations
+                $<TARGET_FILE:edusys_gui>
+        COMMENT "Deploying Qt runtime dependencies for edusys_gui"
+        VERBATIM
+    )
 endif()
 ```
 
-这一组是 GUI 入口。它包含 `src/gui/` 窗口文件，链接 `Qt6::Widgets`。这里没有把 `src/view/*.cpp` 加进来，说明 GUI 不依赖 CLI 菜单；同样，CLI 目标也没有把 `src/gui/*.cpp` 加进去，说明 CLI 不依赖 Qt。
+这一组是 GUI 入口。它包含 `src/gui/` 窗口文件，链接 `Qt6::Widgets`，并在构建后自动部署 Qt 运行时。这里没有把 `src/view/*.cpp` 加进来，说明 GUI 不依赖 CLI 菜单；同样，CLI 目标也没有把 `src/gui/*.cpp` 加进去，说明 CLI 不依赖 Qt。
 
 实际构建时，在已经配置好 Qt MinGW 环境的前提下，可以使用下面这种命令。下面路径是本机示例，不要求每台电脑完全一样。前两条命令使用绝对路径，`cmd` 和 PowerShell 都可以直接执行；如果后面要启动构建目录里的 `edusys_gui.exe`，PowerShell 中仍然要写 `.\build-qt-introduceQt\edusys_gui.exe`。
 

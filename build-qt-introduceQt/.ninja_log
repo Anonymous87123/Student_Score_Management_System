@@ -35,3 +35,10 @@
 76	3727	8025934545367283	CMakeFiles/edusys_gui.dir/src/gui/ChangePasswordDialog.cpp.obj	4e99bc3845137f81
 5	255	8025938269268007	build.ninja	d4368e56430cadc0
 15	576	8025938267794943	edusys_gui.exe	27f4e54928bcb90e
+44	1376	8026007791377772	CMakeFiles/edusys_core.dir/src/common/Logger.cpp.obj	550e9f88009297ac
+1378	1932	8026007804708445	libedusys_core.a	9b005ba0d6b1308e
+68	1259	8026008129239291	edusys_gui.exe	27f4e54928bcb90e
+47	4494	8026011796364910	CMakeFiles/edusys_gui.dir/src/gui/StudentWindow.cpp.obj	fc600883aac4732b
+42	4727	8026011796322102	CMakeFiles/edusys_gui.dir/src/gui/TeacherWindow.cpp.obj	78342791d81f5d0f
+35	5567	8026011796238503	CMakeFiles/edusys_gui.dir/src/gui/AdminWindow.cpp.obj	6693a699c30a6053
+30	1082	8026012121958134	edusys_gui.exe	27f4e54928bcb90e

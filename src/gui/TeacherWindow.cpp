@@ -61,7 +61,7 @@ TeacherWindow::TeacherWindow(AppContext& appContext, Session session, QWidget* p
 
     setCentralWidget(tabs);
     statusBar()->showMessage(
-        QString::fromUtf8(u8"当前教师：%1。教师端全部 4 个页签已接入真实业务层。")
+        QString::fromUtf8(u8"当前教师：%1")
             .arg(QString::fromStdString(session_.getUsername())));
 }
 

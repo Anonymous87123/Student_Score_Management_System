@@ -1,0 +1,17 @@
+[2026-06-08 13:47:18] [INFO] EduSys GUI starting up.
+[2026-06-08 13:47:18] [INFO] All repositories empty -> seeding initial sample data.
+[2026-06-08 13:47:25] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 13:47:25] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 13:47:26] [INFO] EduSys GUI starting up.
+[2026-06-08 13:47:26] [INFO] Existing data files detected -> skip seeding.
+[2026-06-08 13:47:42] [INFO] Auth OK: 'admin'
+[2026-06-08 13:58:13] [INFO] EduSys GUI starting up.
+[2026-06-08 13:58:13] [INFO] Existing data files detected -> skip seeding.
+[2026-06-08 13:58:24] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 13:58:24] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 15:55:35] [INFO] EduSys GUI starting up.
+[2026-06-08 15:55:35] [INFO] Existing data files detected -> skip seeding.
+[2026-06-08 15:55:38] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 15:55:38] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 15:55:40] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 15:55:40] [INFO] Existing data files detected -> skip seeding.

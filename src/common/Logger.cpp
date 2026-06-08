@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include <filesystem>
 #include <sstream>
 
 #include "EduSys/common/Constants.hpp"
@@ -43,9 +44,19 @@ Logger& Logger::instance() {
 }
 
 Logger::Logger() {
-    out_.open(LOG_FILE, std::ios::out | std::ios::app);
-    if (!out_.is_open()) {
-        throw StorageException(std::string("Failed to open log file: ") + LOG_FILE);
+    try {
+        const std::filesystem::path logPath(LOG_FILE);
+        const auto parent = logPath.parent_path();
+        if (!parent.empty()) {
+            std::filesystem::create_directories(parent);
+        }
+
+        out_.open(logPath, std::ios::out | std::ios::app);
+        if (!out_.is_open()) {
+            throw StorageException(std::string("Failed to open log file: ") + LOG_FILE);
+        }
+    } catch (const std::filesystem::filesystem_error& e) {
+        throw StorageException(std::string("Failed to prepare log file: ") + e.what());
     }
 }
 

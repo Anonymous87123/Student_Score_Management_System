@@ -62,11 +62,21 @@ set_target_properties(edusys PROPERTIES
 )
 
 if(EDUSYS_BUILD_GUI)
-    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+    find_package(Qt6 REQUIRED COMPONENTS Widgets CoreTools)
 
     add_executable(edusys_gui WIN32 ${EDUSYS_GUI_SOURCES})
     target_link_libraries(edusys_gui PRIVATE edusys_core Qt6::Widgets)
     set_target_properties(edusys_gui PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    )
+
+    add_custom_command(TARGET edusys_gui POST_BUILD
+        COMMAND $<TARGET_FILE:Qt6::windeployqt>
+                --dir $<TARGET_FILE_DIR:edusys_gui>
+                --compiler-runtime
+                --no-translations
+                $<TARGET_FILE:edusys_gui>
+        COMMENT "Deploying Qt runtime dependencies for edusys_gui"
+        VERBATIM
     )
 endif()

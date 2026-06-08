@@ -50,13 +50,17 @@ EduSys 是一个基于 `C++17` 的学生成绩管理系统。仓库里现在有�
 
 本节提供基础运行步骤。后续章节用于功能说明、代码解读和答辩准备，可按需阅读。
 
-打开终端，进入项目根目录：
+Windows 下常见有两种终端：`cmd`（命令提示符）和 PowerShell。两者大部分命令相近，但 PowerShell 执行当前目录下的 `.bat` 或 `.exe` 时，需要在前面加 `.\`。
+
+如果你是从文件资源管理器右键“在终端中打开”，通常打开的是 PowerShell，提示符前面会看到 `PS`。如果你是从开始菜单打开 `cmd`，提示符一般不会带 `PS`。下面的命令请按你当前窗口的终端类型来选，不要混用。
+
+如果使用 `cmd`，进入项目根目录：
 
 ```cmd
 cd /d D:\Student_Score_Management_System
 ```
 
-PowerShell 可以使用：
+如果使用 PowerShell，进入项目根目录：
 
 ```powershell
 cd D:\Student_Score_Management_System
@@ -73,7 +77,9 @@ dir include
 
 如果能列出这些文件或目录，说明当前目录正确。后面运行 `edusys.exe`、`edusys_gui.exe` 时，也建议都在项目根目录执行，因为程序里的 `data/...` 是按当前运行目录来找的。
 
-CLI 快速命令如下：
+CLI 快速命令如下。你如果看到的是 `PS D:\...>`，请直接看 PowerShell 写法；你如果看到的是 `D:\...>`，请看 `cmd` 写法。
+
+`cmd` 写法：
 
 ```cmd
 build.bat
@@ -82,25 +88,36 @@ edusys.exe
 tools\corrupt_check.bat
 ```
 
+PowerShell 写法：
+
+```powershell
+.\build.bat
+.\edusys.exe --self-test
+.\edusys.exe
+.\tools\corrupt_check.bat
+```
+
 命令含义如下：
 
-- `build.bat`：用 `g++` 在仓库根目录构建 `edusys.exe`
-- `edusys.exe --self-test`：执行 Week 11 + Week 13 A-E 组内建自检
-- `edusys.exe`：进入正常登录与菜单交互，用户名留空直接退出，连续 3 次认证失败后退出
-- `tools\corrupt_check.bat`：执行 Week 13 F 组文件损坏测试并自动恢复
+- `build.bat` / `.\build.bat`：用 `g++` 在仓库根目录构建 `edusys.exe`
+- `edusys.exe --self-test` / `.\edusys.exe --self-test`：执行 Week 11 + Week 13 A-E 组内建自检
+- `edusys.exe` / `.\edusys.exe`：进入正常登录与菜单交互，用户名留空直接退出，连续 3 次认证失败后退出
+- `tools\corrupt_check.bat` / `.\tools\corrupt_check.bat`：执行 Week 13 F 组文件损坏测试并自动恢复
 
 这里的 Week 11 / Week 13 是课程开发阶段编号，不是日历周。A-E / F 是测试分组：A-E 主要覆盖认证、字段非法、重复主键、级联删除、教师权限；F 专门覆盖 `.dat` 文件损坏。`corrupt_check.bat` 会临时制造损坏文件并从备份恢复，运行时不要手动中断脚本。
 
 首次操作建议按下面顺序执行：
 
-1. 执行 `build.bat`。
+1. 执行构建命令：`cmd` 中用 `build.bat`，PowerShell 中用 `.\build.bat`。
 2. 如果编译成功，根目录下会生成或更新 `edusys.exe`。如果出现编译错误，应先处理错误，再继续执行后续命令。
-3. 执行 `edusys.exe --self-test`。
-4. 如果看到 `Week 11 : self-check PASSED` 和 `Week 13 : boundary-check PASSED`，说明核心功能和边界检查正常。
-5. 执行 `edusys.exe` 进入手工菜单。
-6. 登录时可使用 `admin / admin123`，进入管理员菜单后按菜单编号操作。
-7. 退出当前账号时，在菜单里输入 `0`；关闭整个 CLI 程序时，回到登录界面后用户名留空并回车。
-8. `tools\corrupt_check.bat` 是文件损坏测试，适合自检通过后执行；课堂手工演示功能时不一定要先执行它。
+3. 如果 PowerShell 提示“无法将 build.bat 项识别为命令”，通常是少了 `.\`，应改成 `.\build.bat`。
+4. 如果编译时报 `cannot open output file edusys.exe: Permission denied`，通常是 `edusys.exe` 仍在运行。先关闭正在运行的 CLI 窗口，或在任务管理器里结束 `edusys.exe` 后再重新构建。
+5. 执行自检命令：`cmd` 中用 `edusys.exe --self-test`，PowerShell 中用 `.\edusys.exe --self-test`。
+6. 如果看到 `Week 11 : self-check PASSED` 和 `Week 13 : boundary-check PASSED`，说明核心功能和边界检查正常。
+7. 执行交互程序：`cmd` 中用 `edusys.exe`，PowerShell 中用 `.\edusys.exe`。
+8. 登录时可使用 `admin / admin123`，进入管理员菜单后按菜单编号操作。
+9. 退出当前账号时，在菜单里输入 `0`；关闭整个 CLI 程序时，回到登录界面后用户名留空并回车。
+10. `tools\corrupt_check.bat` 是文件损坏测试，PowerShell 中要写成 `.\tools\corrupt_check.bat`；它适合自检通过后执行，课堂手工演示功能时不一定要先执行它。
 
 如果目标是演示 CLI 端功能，建议优先使用 [`docs/cli-demo-guide.md`](docs/cli-demo-guide.md)。该文档按“输入内容、预计输出、演示顺序”组织，更适合课堂现场演示。
 
@@ -127,13 +144,23 @@ tools\corrupt_check.bat
 4. 确认 Qt 的 CMake、Ninja、MinGW 路径都存在，例如 `D:\Qt\Tools\CMake_64\bin\cmake.exe`、`D:\Qt\Tools\Ninja\ninja.exe`、`D:\Qt\Tools\mingw1310_64\bin\g++.exe`。
 5. 运行 CMake 配置命令，生成 `build-qt-introduceQt` 构建目录。
 6. 运行 Ninja 编译命令，生成 `edusys.exe` 和 `edusys_gui.exe`。
-7. 运行 `build-qt-introduceQt\edusys_gui.exe`。
+7. 启动 GUI：`cmd` 中运行 `build-qt-introduceQt\edusys_gui.exe`，PowerShell 中运行 `.\build-qt-introduceQt\edusys_gui.exe`。
 8. 如果弹出登录窗口，说明 GUI 已经启动成功。
+
+`cmd` 写法：
 
 ```cmd
 cmake -S . -B build-qt-introduceQt -G Ninja -DCMAKE_PREFIX_PATH=...
 cmake --build build-qt-introduceQt --target edusys edusys_gui
 build-qt-introduceQt\edusys_gui.exe
+```
+
+PowerShell 写法：
+
+```powershell
+cmake -S . -B build-qt-introduceQt -G Ninja -DCMAKE_PREFIX_PATH=...
+cmake --build build-qt-introduceQt --target edusys edusys_gui
+.\build-qt-introduceQt\edusys_gui.exe
 ```
 
 说明：
@@ -143,12 +170,22 @@ build-qt-introduceQt\edusys_gui.exe
 - `edusys_gui.exe` 的启动入口是 `src/app/gui_main.cpp`，不会复用 CLI 的 `src/app/main.cpp`。
 - 两条入口共享 `AppContext`、服务层、仓储层和报表层。`AppContext` 是 CLI 和 GUI 共用的运行时装配入口。
 
-如果使用当前机器上已经验证过的 Qt MinGW 路径，可以使用下面的完整命令：
+如果使用当前机器上已经验证过的 Qt MinGW 路径，可以使用下面的完整命令。
+
+`cmd` 写法：
 
 ```cmd
 D:\Qt\Tools\CMake_64\bin\cmake.exe -S . -B build-qt-introduceQt -G Ninja -DCMAKE_PREFIX_PATH=D:\Qt\6.11.0\mingw_64 -DCMAKE_MAKE_PROGRAM=D:\Qt\Tools\Ninja\ninja.exe -DCMAKE_CXX_COMPILER=D:\Qt\Tools\mingw1310_64\bin\g++.exe
 D:\Qt\Tools\Ninja\ninja.exe -C build-qt-introduceQt edusys edusys_gui
 build-qt-introduceQt\edusys_gui.exe
+```
+
+PowerShell 写法：
+
+```powershell
+D:\Qt\Tools\CMake_64\bin\cmake.exe -S . -B build-qt-introduceQt -G Ninja -DCMAKE_PREFIX_PATH=D:\Qt\6.11.0\mingw_64 -DCMAKE_MAKE_PROGRAM=D:\Qt\Tools\Ninja\ninja.exe -DCMAKE_CXX_COMPILER=D:\Qt\Tools\mingw1310_64\bin\g++.exe
+D:\Qt\Tools\Ninja\ninja.exe -C build-qt-introduceQt edusys edusys_gui
+.\build-qt-introduceQt\edusys_gui.exe
 ```
 
 三条命令分别对应：
@@ -171,7 +208,9 @@ GUI 退出方式：在角色窗口点击“退出登录”会回到登录框；�
 
 #### 方式 A：CMake / MSVC
 
-```bash
+下面两条命令在 `cmd` 和 PowerShell 中都可以直接执行，不需要额外前缀。
+
+```text
 cmake -S . -B build
 cmake --build build --config Release
 ```
@@ -184,8 +223,16 @@ cmake --build build --config Release
 
 #### 方式 B：`g++` 备用脚本
 
-```bash
+`cmd` 写法：
+
+```cmd
 build.bat
+```
+
+PowerShell 写法：
+
+```powershell
+.\build.bat
 ```
 
 说明：
@@ -1662,7 +1709,7 @@ Student_Score_Management_System/
 
 需要注意：当前工作区里有一些 `build-qt-*` 文件已经被 Git 跟踪或处于修改状态。不要简单地整目录删除；清理前先运行：
 
-```bash
+```text
 git status --short
 git ls-files build-qt-introduceQt
 ```
@@ -1735,13 +1782,21 @@ git ls-files build-qt-introduceQt
 - 答辩前彩排
 - 验证交互菜单是否仍然连贯
 
-运行方式示例：
+运行方式示例。这个功能是把文本文件内容当作键盘输入传给 CLI 程序，`cmd` 和 PowerShell 的写法不同。
 
-```bash
+`cmd` 写法：
+
+```cmd
 edusys.exe < demo_input.txt
 ```
 
-这条命令会把 `demo_input.txt` 里的多行文本当作键盘输入喂给 `edusys.exe`。它走的是真实 CLI 交互，因此可能新增、修改或删除 `data/*.dat` 里的演示数据；它不是边界测试，也不等同于 `--self-test`。
+PowerShell 写法：
+
+```powershell
+Get-Content .\demo_input.txt | .\edusys.exe
+```
+
+这两条命令都会把 `demo_input.txt` 里的多行文本当作键盘输入传给 `edusys.exe`。它走的是真实 CLI 交互，因此可能新增、修改或删除 `data/*.dat` 里的演示数据；它不是边界测试，也不等同于 `--self-test`。
 
 这里需要把三个材料区分开：
 
@@ -1908,9 +1963,9 @@ endif()
 
 这一组是 GUI 入口。它包含 `src/gui/` 窗口文件，链接 `Qt6::Widgets`。这里没有把 `src/view/*.cpp` 加进来，说明 GUI 不依赖 CLI 菜单；同样，CLI 目标也没有把 `src/gui/*.cpp` 加进去，说明 CLI 不依赖 Qt。
 
-实际构建时，在已经配置好 Qt MinGW 环境的前提下，可以使用下面这种命令。下面路径是本机示例，不要求每台电脑完全一样：
+实际构建时，在已经配置好 Qt MinGW 环境的前提下，可以使用下面这种命令。下面路径是本机示例，不要求每台电脑完全一样。前两条命令使用绝对路径，`cmd` 和 PowerShell 都可以直接执行；如果后面要启动构建目录里的 `edusys_gui.exe`，PowerShell 中仍然要写 `.\build-qt-introduceQt\edusys_gui.exe`。
 
-```bash
+```cmd
 D:\Qt\Tools\CMake_64\bin\cmake.exe -S . -B build-qt-introduceQt -G Ninja -DCMAKE_PREFIX_PATH=D:\Qt\6.11.0\mingw_64 -DCMAKE_MAKE_PROGRAM=D:\Qt\Tools\Ninja\ninja.exe -DCMAKE_CXX_COMPILER=D:\Qt\Tools\mingw1310_64\bin\g++.exe
 D:\Qt\Tools\Ninja\ninja.exe -C build-qt-introduceQt edusys edusys_gui
 ```

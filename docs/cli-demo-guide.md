@@ -89,7 +89,7 @@ edusys.exe
 如果没有 `edusys.exe`，先编译：
 
 ```powershell
-cmd /c build.bat
+.\build.bat
 ```
 
 预期关键输出：

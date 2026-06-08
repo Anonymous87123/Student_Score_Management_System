@@ -4,8 +4,10 @@
 
 #include <QApplication>
 #include <QDialog>
+#include <QEventLoop>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QObject>
 
 #include "EduSys/app/AppContext.hpp"
 #include "EduSys/common/Exception.hpp"
@@ -63,18 +65,24 @@ int main(int argc, char* argv[]) {
                     u8"学生：s001 / s001pw"));
         }
 
-        EduSys::LoginDialog loginDialog(appContext);
-        if (loginDialog.exec() != QDialog::Accepted) {
-            logger.info("EduSys GUI shutdown normally (login cancelled).");
-            return 0;
+        while (true) {
+            EduSys::LoginDialog loginDialog(appContext);
+            if (loginDialog.exec() != QDialog::Accepted) {
+                logger.info("EduSys GUI shutdown normally (login cancelled).");
+                break;
+            }
+
+            auto* mainWindow = createRoleWindow(appContext, loginDialog.session()).release();
+            mainWindow->setAttribute(Qt::WA_DeleteOnClose);
+            mainWindow->show();
+
+            QEventLoop eventLoop;
+            QObject::connect(mainWindow, &QObject::destroyed, &eventLoop, &QEventLoop::quit);
+            eventLoop.exec();
         }
 
-        auto mainWindow = createRoleWindow(appContext, loginDialog.session());
-        mainWindow->show();
-
-        const int exitCode = app.exec();
         logger.info("EduSys GUI shutdown normally.");
-        return exitCode;
+        return 0;
     } catch (const std::exception& e) {
         QMessageBox::critical(
             nullptr,

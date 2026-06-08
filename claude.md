@@ -773,11 +773,13 @@ flowchart TD
 
 * CMake 能同时构建 `edusys` 与 `edusys_gui`
 * `edusys_gui` 在未 seed 与已 seed 两种状态下均可正常启动
+* 当前状态备注：`introduceQt` 分支已完成 `edusys_gui` 目标接入，构建验证以 CMake 为唯一正式入口
 
 #### 8.6.2 回归验证
 
 * 现有 `edusys --self-test` 必须保持全绿
 * `tools/corrupt_check.bat` 必须继续通过
+* 当前状态备注：CLI 自检与损坏恢复脚本仍是 GUI 分支的自动化回归基线，不因引入 Qt 而替换
 
 #### 8.6.3 GUI 手工验收
 
@@ -788,11 +790,13 @@ flowchart TD
 * Student：只能查看自己的资料/成绩/GPA，并能修改密码
 * 登出后返回登录框
 * 重启 GUI 后数据仍从原有 `.dat` 正确加载
+* 当前状态备注：本节仍以手工验收为准；代码层面已接入对应页面与对话框，但需逐项勾验运行表现与文案显示
 
 #### 8.6.4 一致性验收
 
 * GUI 修改数据后，CLI 读取结果与 GUI 展示一致
 * GUI 导出的 `.txt / .csv` 与 CLI 版本路径和内容语义一致
+* 当前状态备注：一致性校验应以 GUI 改写 `data/*.dat` 后再回读 CLI 与导出文件为准，不能仅凭静态代码判定完工
 
 ### 8.7 实施假设与范围控制
 

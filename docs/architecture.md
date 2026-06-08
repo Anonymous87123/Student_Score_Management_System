@@ -288,7 +288,7 @@ flowchart TD
 
 ## Qt 适配讨论
 
-> 兑现 [`claude.md` §5.2](../claude.md) 中"未来若引入 Qt，新的 GUI 层应直接调用 service 层"的承诺。**本节是文档讨论，没有 Qt 代码**。
+> 兑现 [`claude.md` §5.2](../claude.md) 中"未来若引入 Qt，新的 GUI 层应直接调用 service 层"的承诺。当前主分层设计仍以 CLI 为基准，但在 `introduceQt` 分支里，这套替换边界已经被实际落成了 `src/gui/` 与 `src/app/gui_main.cpp`。
 
 ### 该改的部分（GUI 替换边界）
 
@@ -307,13 +307,19 @@ flowchart TD
 - **`Session` 值对象**：[`Session.hpp`](../include/EduSys/service/Session.hpp) 一行不动。Qt 主窗口持有一个 `Session` 实例，登录窗口填它，登出时清空。
 - **`ReportExporter`**：Week 12/14 的 `.txt` 与 `.csv` 导出逻辑一行不动。Qt 触发方式从"菜单第 5 项"换成"按钮 click 信号"。
 
-### 验证方式（如真要做 Qt）
+### `introduceQt` 分支对应实现
 
-把 [`AdminMenu::run`](../src/view/AdminMenu.cpp#L37-L63) 里的 `switch(choice)` 拆成几个 Qt slot，每个 slot 调对应 Service 方法 → 拿返回值 → 塞进 widget。如果发现哪个 Service 接口需要调整才能给 Qt 用，那就是当前的 GUI 中立性还不够；目前看下来不需要。
+- GUI 入口：[`src/app/gui_main.cpp`](../src/app/gui_main.cpp) 负责 `QApplication`、登录对话框、按角色创建主窗口，以及登出后回到登录框。
+- 登录与角色窗口：[`LoginDialog`](../src/gui/LoginDialog.cpp)、[`AdminWindow`](../src/gui/AdminWindow.cpp)、[`TeacherWindow`](../src/gui/TeacherWindow.cpp)、[`StudentWindow`](../src/gui/StudentWindow.cpp) 已分别接入真实 Service。
+- 编辑与改密对话框：[`StudentEditDialog`](../src/gui/StudentEditDialog.cpp)、[`CourseEditDialog`](../src/gui/CourseEditDialog.cpp)、[`ScoreEditDialog`](../src/gui/ScoreEditDialog.cpp)、[`ChangePasswordDialog`](../src/gui/ChangePasswordDialog.cpp) 负责采集输入，但不直接触碰 Repository。
 
-### 不引入 Qt 的取舍
+### 验证方式（`introduceQt` 当前状态）
 
-课程项目交付以"控制台版本 + 全套自检 + 全套文档"为主线，Qt 适配作为讨论项保留是 [`claude.md` §5.3](../claude.md) 明确列入"扩展项而非首版阻塞项"的决策。本图册的存在本身就是为了让"如果未来真要做"时不至于推倒重来。
+`introduceQt` 分支仍沿用 CLI 的 `--self-test` 与 [`tools/corrupt_check.bat`](../tools/corrupt_check.bat) 作为自动化回归基线；GUI 侧则按 [`claude.md` §8.6](../claude.md) 执行手工验收。这样做的目的不是让 GUI 逃避验证，而是继续用 CLI 保证核心业务规则和损坏恢复链路不退化。
+
+### 交付取舍
+
+课程项目的正式自动化基线仍是"控制台版本 + 全套自检 + 全套文档"。`introduceQt` 分支已经实现了 Qt Widgets GUI，但没有把 GUI 自动化测试框架一并引入；这与 [`claude.md` §8.7](../claude.md) 中"v1 不引入 Qt Test"的范围控制保持一致。
 
 ---
 

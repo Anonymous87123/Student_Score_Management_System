@@ -45,6 +45,9 @@ set(EDUSYS_GUI_SOURCES
     src/gui/LoginDialog.cpp
     src/gui/AdminWindow.cpp
     src/gui/StudentEditDialog.cpp
+    src/gui/CourseEditDialog.cpp
+    src/gui/ScoreEditDialog.cpp
+    src/gui/ChangePasswordDialog.cpp
     src/gui/TeacherWindow.cpp
     src/gui/StudentWindow.cpp
 )

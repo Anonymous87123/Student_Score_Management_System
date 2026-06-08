@@ -29,24 +29,37 @@ void validateCourse(const Course& c) {
     if (c.getCredit() <= 0.0)      throw ValidationException("Course credit must be positive");
 }
 
+void requireLoggedIn(const Session& session, const std::string& op) {
+    if (!session.isLoggedIn()) {
+        throw AuthException("Not logged in (op=" + op + ")");
+    }
+}
+
 } // namespace
 
 std::vector<Course> CourseService::listAll(const Session& session) {
-    if (!session.isLoggedIn()) {
-        throw AuthException("Not logged in (op=Course.listAll)");
+    requireLoggedIn(session, "Course.listAll");
+
+    auto all = courseRepo_.loadAll();
+    if (session.isTeacher()) {
+        all.erase(std::remove_if(all.begin(), all.end(),
+            [&](const Course& c) { return c.getTeacherId() != session.getOwnerId(); }),
+            all.end());
     }
-    return courseRepo_.loadAll();
+    return all;
 }
 
 Course CourseService::findById(const Session& session, const std::string& courseId) {
-    if (!session.isLoggedIn()) {
-        throw AuthException("Not logged in (op=Course.findById)");
-    }
+    requireLoggedIn(session, "Course.findById");
+
     auto all = courseRepo_.loadAll();
     auto it = std::find_if(all.begin(), all.end(),
         [&](const Course& c) { return c.getCourseId() == courseId; });
     if (it == all.end()) {
         throw ValidationException("Course not found: " + courseId);
+    }
+    if (session.isTeacher() && it->getTeacherId() != session.getOwnerId()) {
+        throw PermissionException("Teacher can only read own courses");
     }
     return *it;
 }

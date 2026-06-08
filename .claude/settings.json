@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk ls *)",
+      "Bash(cmake .. -G \"MinGW Makefiles\" -DCMAKE_PREFIX_PATH=\"C:/Qt/6.9.0/mingw_64\" -DEDUSYS_BUILD_GUI=ON)"
+    ]
+  }
+}

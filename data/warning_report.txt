@@ -1,6 +1,6 @@
 ============================================================
  EduSys Academic Warning Report
- Generated at : 2026-05-05 16:05:22
+ Generated at : 2026-06-05 17:21:35
  Operator     : admin (Admin)
  Threshold    : GPA < 2.0  OR  failCount >= 2
  Hits         : 1

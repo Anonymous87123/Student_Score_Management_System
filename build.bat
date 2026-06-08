@@ -5,6 +5,7 @@ set CXX=g++
 set FLAGS=-std=c++17 -Wall -Wextra -Wpedantic -O2 -Iinclude
 
 %CXX% %FLAGS% ^
+    src\app\AppContext.cpp ^
     src\app\main.cpp ^
     src\common\Logger.cpp ^
     src\common\PasswordHasher.cpp ^

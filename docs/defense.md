@@ -163,11 +163,12 @@
 
 ### Q13 如果要换 Qt 图形界面，需要改多少代码？
 
-**答**：**几乎只改 `view/` 与 `app/main.cpp` 主循环**。Service / Storage / Model / Session / ReportExporter 全部一行不动。原因是 Service 接口已经是 GUI 中立的：返回 `std::vector<Student>` / 自定义结构体 / 抛异常，没有任何 `cout` / `cin` 介入。Qt 主窗口直接持有一个 `Session` 实例 + 一组 Service 引用，slot 里调 Service 拿到 `vector` 就喂给 `QTableView`。详细的"该改 / 不该改"清单在 [`docs/architecture.md`](architecture.md) 末尾的 Qt 适配段。
+**答**：**几乎只改 `view/` 与主循环入口**。Service / Storage / Model / Session / ReportExporter 全部继续复用。原因是 Service 接口已经是 GUI 中立的：返回 `std::vector<Student>` / 自定义结构体 / 抛异常，没有任何 `cout` / `cin` 介入。Qt 主窗口直接持有一个 `Session` 实例 + 一组 Service 引用，slot 里调 Service 拿到 `vector` 就喂给 `QTableView`。`introduceQt` 分支已经把这件事落成了 [`src/app/gui_main.cpp`](../src/app/gui_main.cpp) 和 [`src/gui/`](../src/gui) 目录下的一组窗口 / 对话框。
 
 **对证**：
 - Service 接口的 GUI 中立性：[`include/EduSys/service/StatsService.hpp`](../include/EduSys/service/StatsService.hpp)（返回 `GpaResult` / `CourseStats` / `vector<RankEntry>` / `vector<WarningEntry>`，没有任何字符串排版逻辑）。
-- 当前 View 层和 Service 层的耦合点：[`src/app/main.cpp:451-467`](../src/app/main.cpp#L451-L467) `switch (acc.getRole())` 实例化三个 Menu，换 Qt 时这一段换成 `QApplication::exec()` 与 QDialog 即可。
+- CLI 入口的角色分发点：[`src/app/main.cpp`](../src/app/main.cpp) 中 `switch (acc.getRole())` 实例化三个 Menu。
+- Qt 入口的对应落地：[`src/app/gui_main.cpp`](../src/app/gui_main.cpp) 中 `createRoleWindow(...)` 根据 `Session` 构造 `AdminWindow / TeacherWindow / StudentWindow`。
 
 ---
 

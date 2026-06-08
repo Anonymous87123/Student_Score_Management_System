@@ -251,21 +251,31 @@ void runWeek13BoundaryCheck(EduSys::StudentRepository& studentRepo,
                 Score("S001", "C001", "2025-2026-1", 50.0, 50.0, 50.0)); });
     assertThrowsWeek13<PermissionException>("E2 ghost-teacher findByCourse C001",
         [&]{ (void)scoreSvc.findByCourse(teacherGhost, "C001"); });
+    assertThrowsWeek13<PermissionException>("E2b ghost-teacher findCourse C001",
+        [&]{ (void)courseSvc.findById(teacherGhost, "C001"); });
     {
+        auto ownCourses = courseSvc.listAll(teacherT001);
+        if (!std::all_of(ownCourses.begin(), ownCourses.end(),
+                [](const Course& c) { return c.getTeacherId() == "T001"; })) {
+            throw EduException("E3: teacher listAll leaked non-own course");
+        }
+        std::cout << "   [E3 teacher course whitelist] PASS (n="
+                  << ownCourses.size() << ")\n";
+
         auto ownScores = scoreSvc.listAll(teacherT001);
         auto courses   = courseRepo.loadAll();
         for (const auto& s : ownScores) {
             auto it = std::find_if(courses.begin(), courses.end(),
                 [&](const Course& c) { return c.getCourseId() == s.getCourseId(); });
             if (it == courses.end() || it->getTeacherId() != "T001") {
-                throw EduException("E3: teacher listAll leaked non-own course");
+                throw EduException("E4: teacher score listAll leaked non-own course");
             }
         }
-        std::cout << "   [E3 teacher listAll whitelist] PASS (n="
+        std::cout << "   [E4 teacher score whitelist] PASS (n="
                   << ownScores.size() << ")\n";
     }
 
-    assertThrowsWeek13<PermissionException>("E4 student cannot read others",
+    assertThrowsWeek13<PermissionException>("E5 student cannot read others",
         [&]{ (void)scoreSvc.findByStudent(studentSession, "S004"); });
 
     Logger::instance().info("Week 13 boundary check PASSED.");

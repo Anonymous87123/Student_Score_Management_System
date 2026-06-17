@@ -18,7 +18,7 @@ class Session;
 //   Teacher : 只读
 //   Student : 只读
 // remove() 物理级联：先清 scores.dat 中相关记录，再删 courses.dat 中的课程本身。
-// create / update 时校验 teacherId 必须在 teachers.dat 中存在。
+// create / update 时校验 teacherId 字段中的每个教师编号都必须在 teachers.dat 中存在。
 class CourseService {
 public:
     CourseService(CourseRepository&  courseRepo,
@@ -27,6 +27,11 @@ public:
         : courseRepo_(courseRepo), scoreRepo_(scoreRepo), teacherRepo_(teacherRepo) {}
 
     std::vector<Course> listAll(const Session& session);
+    std::vector<Course> listBySemester(const Session& session, const std::string& semester);
+    std::vector<Course> listByTeacher(const Session& session, const std::string& teacherId);
+    std::vector<Course> listByTeacherAndSemester(const Session& session,
+                                                 const std::string& teacherId,
+                                                 const std::string& semester);
     Course              findById(const Session& session, const std::string& courseId);
 
     void create(const Session& session, const Course& course);

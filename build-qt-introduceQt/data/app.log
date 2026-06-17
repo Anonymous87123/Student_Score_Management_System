@@ -15,3 +15,191 @@
 [2026-06-08 15:55:38] [INFO] EduSys GUI shutdown normally.
 [2026-06-08 15:55:40] [INFO] EduSys starting up (mode=interactive).
 [2026-06-08 15:55:40] [INFO] Existing data files detected -> skip seeding.
+[2026-06-08 17:13:28] [INFO] EduSys GUI starting up.
+[2026-06-08 17:13:28] [INFO] Existing data files detected -> skip seeding.
+[2026-06-08 17:13:36] [INFO] Auth OK: 'admin'
+[2026-06-08 17:18:16] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 17:18:16] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 17:36:30] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:36:30] [INFO] Existing data files detected -> demo catalog enriched with missing records.
+[2026-06-08 17:36:30] [INFO] Auth OK: 'admin'
+[2026-06-08 17:36:30] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:36:30] [INFO] Student removed (cascade): id=S002 scores=-1 users=-1
+[2026-06-08 17:36:30] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 17:38:00] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:38:00] [INFO] Existing data files detected -> demo catalog enriched with missing records.
+[2026-06-08 17:38:00] [INFO] Auth OK: 'admin'
+[2026-06-08 17:38:00] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:38:00] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:38:00] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:38:00] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:38:00] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:38:00] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:38:27] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:38:27] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:38:27] [INFO] Auth OK: 'admin'
+[2026-06-08 17:38:27] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:48:43] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:48:43] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:48:43] [INFO] Auth OK: 'admin'
+[2026-06-08 17:48:43] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:48:43] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:48:43] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:48:43] [INFO] Auth OK: 'admin'
+[2026-06-08 17:48:43] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 20:36:51] [INFO] EduSys GUI starting up.
+[2026-06-08 20:36:51] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:40:10] [INFO] EduSys GUI starting up.
+[2026-06-08 20:40:10] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:57:25] [INFO] EduSys GUI starting up.
+[2026-06-08 20:57:25] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:06:33] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 21:06:33] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 21:15:08] [INFO] EduSys GUI starting up.
+[2026-06-08 21:15:08] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:28:09] [INFO] EduSys GUI starting up.
+[2026-06-08 21:28:09] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:28:29] [INFO] Auth OK: 'admin'
+[2026-06-08 21:29:48] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 21:29:48] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 21:31:39] [INFO] EduSys GUI starting up.
+[2026-06-08 21:31:39] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:31:47] [INFO] Auth OK: 'admin'
+[2026-06-08 21:32:14] [INFO] Student updated: S031
+[2026-06-08 21:32:43] [INFO] Student updated: S032
+[2026-06-08 21:33:00] [INFO] Student updated: S033
+[2026-06-08 21:34:22] [INFO] Student updated: S034
+[2026-06-08 21:34:36] [INFO] Student updated: S035
+[2026-06-08 21:34:46] [INFO] Student updated: S036
+[2026-06-08 21:35:28] [INFO] Student updated: S037
+[2026-06-08 21:35:43] [INFO] Student updated: S038
+[2026-06-08 21:35:52] [INFO] Student updated: S039
+[2026-06-08 21:36:03] [INFO] Student updated: S040
+[2026-06-08 21:36:11] [INFO] Student updated: S041
+[2026-06-08 21:36:28] [INFO] Student updated: S042
+[2026-06-08 21:36:43] [INFO] Student updated: S043
+[2026-06-08 21:37:02] [INFO] Student updated: S044
+[2026-06-08 21:39:47] [INFO] Student updated: S045
+[2026-06-08 21:40:15] [INFO] Student updated: S046
+[2026-06-08 21:40:24] [INFO] Student updated: S047
+[2026-06-08 21:40:47] [INFO] Student updated: S048
+[2026-06-08 21:40:56] [INFO] Student updated: S049
+[2026-06-08 21:41:15] [INFO] Student updated: S050
+[2026-06-08 21:42:07] [INFO] Student updated: S051
+[2026-06-08 21:42:42] [INFO] Student updated: S001
+[2026-06-08 21:42:49] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 21:42:49] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 21:42:53] [INFO] EduSys GUI starting up.
+[2026-06-08 21:42:53] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:42:59] [INFO] Auth OK: 'admin'
+[2026-06-08 21:43:13] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 21:43:13] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 21:49:07] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 21:49:07] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:07] [INFO] Auth OK: 's001'
+[2026-06-08 21:49:07] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 21:49:46] [INFO] EduSys GUI starting up.
+[2026-06-08 21:49:46] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:55:30] [INFO] EduSys GUI starting up.
+[2026-06-08 21:55:30] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:55:44] [INFO] Auth OK: 'admin'
+[2026-06-08 21:56:21] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-08 21:56:21] [INFO] EduSys GUI shutdown normally.
+[2026-06-08 22:02:44] [INFO] EduSys GUI starting up.
+[2026-06-08 22:02:44] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 22:03:01] [WARN] Auth failed: unknown user '白起'
+[2026-06-08 22:03:06] [INFO] Auth OK: 's001'
+[2026-06-08 22:04:14] [INFO] Auth OK: 'admin'
+[2026-06-08 22:04:36] [INFO] Teacher updated: T001
+[2026-06-08 22:05:07] [INFO] Teacher updated: T002
+[2026-06-08 22:05:24] [INFO] Teacher updated: T001
+[2026-06-08 22:05:36] [INFO] Teacher updated: T001
+[2026-06-08 22:07:37] [INFO] Teacher updated: T003
+[2026-06-08 22:08:10] [INFO] Teacher updated: T004
+[2026-06-08 22:08:27] [INFO] Teacher updated: T005
+[2026-06-08 22:08:49] [INFO] Teacher updated: T006
+[2026-06-08 22:09:13] [INFO] Score updated: S001/C001/2025-2026-1
+[2026-06-09 14:18:36] [INFO] EduSys GUI starting up.
+[2026-06-09 14:18:36] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 14:18:55] [INFO] Auth OK: 'admin'
+[2026-06-09 14:22:17] [INFO] CourseStats CSV exported: courseId=C001 path=data/course_stats_C001.csv
+[2026-06-09 14:22:22] [INFO] Warning report exported: hits=0 path=data/warning_report.txt
+[2026-06-09 14:23:33] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 14:23:33] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 14:44:25] [INFO] EduSys GUI starting up.
+[2026-06-09 14:44:25] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 14:44:31] [INFO] Auth OK: 'admin'
+[2026-06-09 14:45:45] [INFO] CourseStats CSV exported: courseId=C001 path=data/course_stats_C001.csv
+[2026-06-09 14:47:22] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 14:47:22] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 14:50:06] [INFO] EduSys GUI starting up.
+[2026-06-09 14:50:06] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 14:50:15] [INFO] Auth OK: 'admin'
+[2026-06-09 14:53:58] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 14:53:58] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 15:32:16] [INFO] EduSys GUI starting up.
+[2026-06-09 15:32:16] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 15:32:23] [INFO] Auth OK: 'admin'
+[2026-06-09 15:40:36] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 15:40:36] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 16:03:36] [INFO] EduSys GUI starting up.
+[2026-06-09 16:03:36] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:03:43] [INFO] Auth OK: 'admin'
+[2026-06-09 16:04:51] [INFO] Student created: S002
+[2026-06-09 16:07:20] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 16:07:20] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 16:11:49] [INFO] EduSys starting up (mode=interactive).
+[2026-06-09 16:11:49] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:11:49] [INFO] Auth OK: 'admin'
+[2026-06-09 16:11:49] [INFO] EduSys shutdown normally (interactive).
+[2026-06-09 16:39:03] [INFO] EduSys GUI starting up.
+[2026-06-09 16:39:03] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:39:16] [INFO] Auth OK: 'admin'
+[2026-06-09 16:40:16] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 16:40:16] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 16:40:55] [INFO] EduSys GUI starting up.
+[2026-06-09 16:40:55] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:41:04] [INFO] Auth OK: 't001'
+[2026-06-09 16:42:17] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 16:42:17] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 19:23:20] [INFO] EduSys GUI starting up.
+[2026-06-09 19:23:20] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 19:23:27] [INFO] Auth OK: 'admin'
+[2026-06-09 20:05:25] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 20:05:25] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 20:05:28] [INFO] EduSys GUI starting up.
+[2026-06-09 20:05:28] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 20:05:39] [INFO] Auth OK: 'admin'
+[2026-06-09 20:07:43] [INFO] CourseStats CSV exported: courseId=C001 path=data/course_stats_C001.csv
+[2026-06-09 20:08:22] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 20:08:24] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 20:08:27] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 20:08:29] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 20:08:29] [INFO] EduSys GUI shutdown normally.
+[2026-06-09 20:08:31] [INFO] EduSys GUI starting up.
+[2026-06-09 20:08:31] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 20:08:56] [INFO] Auth OK: 'admin'
+[2026-06-09 20:27:11] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-09 20:27:11] [INFO] EduSys GUI shutdown normally.
+[2026-06-16 22:10:00] [INFO] EduSys GUI starting up.
+[2026-06-16 22:10:00] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-16 22:12:47] [INFO] Auth OK: 'admin'
+[2026-06-16 22:16:22] [WARN] Auth failed: bad password for 'admin'
+[2026-06-16 22:17:04] [WARN] Auth failed: bad password for 'admin'
+[2026-06-16 22:17:49] [WARN] Auth failed: bad password for 'admin'
+[2026-06-16 22:18:35] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-16 22:18:35] [INFO] EduSys GUI shutdown normally.
+[2026-06-16 22:18:37] [INFO] EduSys GUI starting up.
+[2026-06-16 22:18:37] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-16 22:18:48] [INFO] Auth OK: 'admin'
+[2026-06-16 22:42:29] [INFO] Warning report exported: hits=0 path=data/warning_report.txt
+[2026-06-16 22:46:46] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-16 22:46:46] [INFO] EduSys GUI shutdown normally.
+[2026-06-17 12:32:14] [INFO] EduSys GUI starting up.
+[2026-06-17 12:32:14] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-17 12:32:29] [WARN] Auth failed: unknown user 'T001'
+[2026-06-17 12:32:40] [WARN] Auth failed: unknown user 'T001'
+[2026-06-17 12:35:32] [INFO] Auth OK: 't001'
+[2026-06-17 12:39:25] [INFO] Auth OK: 's001'
+[2026-06-17 13:09:21] [INFO] EduSys GUI shutdown normally (login cancelled).
+[2026-06-17 13:09:21] [INFO] EduSys GUI shutdown normally.

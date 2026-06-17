@@ -21,14 +21,13 @@ public:
 
     void setName(std::string name) { name_ = std::move(name); }
     void setContact(std::string contact) { contact_ = std::move(contact); }
-
     // 角色标签，派生类必须实现。
     virtual std::string roleLabel() const = 0;
-
 protected:
     std::string id_;
     std::string name_;
     std::string contact_;
 };
+} // 使用namespace EduSys
 
-} // namespace EduSys
+

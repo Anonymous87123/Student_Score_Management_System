@@ -141,14 +141,14 @@ if !OK_F2! equ 1 (
 )
 
 rem ------------------------------------------------------------------------
-rem F3: scores.dat count field inflated (actual ~3 records, but count = 255)
-rem    -- header passes, then reading the 4th non-existent record underflows
+rem F3: scores.dat count field inflated (actual count + 1000)
+rem    -- header passes, then reading past the real record tail underflows
 rem       BinaryReader, which raises StorageException.
 rem    -- Offset 8..11 is count (uint32, little-endian host order on x64).
 rem ------------------------------------------------------------------------
 echo.
-echo [F3] scores.dat count -^> 0xFF  ^(expect rc=1 from underflow^)
-powershell -NoProfile -Command "$p='%DATA%\scores.dat'; $b=[IO.File]::ReadAllBytes($p); $b[8]=[byte]0xFF; $b[9]=[byte]0x00; $b[10]=[byte]0x00; $b[11]=[byte]0x00; [IO.File]::WriteAllBytes($p,$b)"
+echo [F3] scores.dat count -^> current+1000  ^(expect rc=1 from underflow^)
+powershell -NoProfile -Command "$p='%DATA%\scores.dat'; $b=[IO.File]::ReadAllBytes($p); $count=[BitConverter]::ToUInt32($b,8); $new=[BitConverter]::GetBytes([uint32]($count+1000)); [Array]::Copy($new,0,$b,8,4); [IO.File]::WriteAllBytes($p,$b)"
 .\%EXE% --self-test > %OUTDIR%\F3.out 2>&1
 set RC_F3=!errorlevel!
 copy /y %BACKUP%\scores.dat %DATA%\scores.dat >nul

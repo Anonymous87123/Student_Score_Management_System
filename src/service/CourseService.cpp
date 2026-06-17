@@ -24,7 +24,7 @@ void requireAdmin(const Session& session, const std::string& op) {
 void validateCourse(const Course& c) {
     if (c.getCourseId().empty())   throw ValidationException("Course id must not be empty");
     if (c.getCourseName().empty()) throw ValidationException("Course name must not be empty");
-    if (c.getTeacherId().empty())  throw ValidationException("Course teacherId must not be empty");
+    if (c.getTeacherIds().empty()) throw ValidationException("Course teacherId must not be empty");
     if (c.getSemester().empty())   throw ValidationException("Course semester must not be empty");
     if (c.getCredit() <= 0.0)      throw ValidationException("Course credit must be positive");
 }
@@ -32,6 +32,22 @@ void validateCourse(const Course& c) {
 void requireLoggedIn(const Session& session, const std::string& op) {
     if (!session.isLoggedIn()) {
         throw AuthException("Not logged in (op=" + op + ")");
+    }
+}
+
+void validateCourseTeachers(TeacherRepository& teacherRepo, const Course& course) {
+    const auto teacherIds = course.getTeacherIds();
+    if (teacherIds.empty()) {
+        throw ValidationException("Course teacherId must not be empty");
+    }
+
+    auto teachers = teacherRepo.loadAll();
+    for (const auto& teacherId : teacherIds) {
+        auto teacherIt = std::find_if(teachers.begin(), teachers.end(),
+            [&](const Teacher& t) { return t.getId() == teacherId; });
+        if (teacherIt == teachers.end()) {
+            throw ValidationException("Course teacherId not found: " + teacherId);
+        }
     }
 }
 
@@ -43,9 +59,66 @@ std::vector<Course> CourseService::listAll(const Session& session) {
     auto all = courseRepo_.loadAll();
     if (session.isTeacher()) {
         all.erase(std::remove_if(all.begin(), all.end(),
-            [&](const Course& c) { return c.getTeacherId() != session.getOwnerId(); }),
+            [&](const Course& c) { return !c.hasTeacher(session.getOwnerId()); }),
             all.end());
     }
+    return all;
+}
+
+std::vector<Course> CourseService::listBySemester(const Session& session, const std::string& semester) {
+    requireLoggedIn(session, "Course.listBySemester");
+    if (semester.empty()) {
+        throw ValidationException("Course semester must not be empty");
+    }
+
+    auto all = courseRepo_.loadAll();
+    all.erase(std::remove_if(all.begin(), all.end(),
+        [&](const Course& c) {
+            if (c.getSemester() != semester) {
+                return true;
+            }
+            return session.isTeacher() && !c.hasTeacher(session.getOwnerId());
+        }),
+        all.end());
+    return all;
+}
+
+std::vector<Course> CourseService::listByTeacher(const Session& session, const std::string& teacherId) {
+    requireLoggedIn(session, "Course.listByTeacher");
+    if (teacherId.empty()) {
+        throw ValidationException("Teacher id must not be empty");
+    }
+    if (session.isTeacher() && teacherId != session.getOwnerId()) {
+        throw PermissionException("Teacher can only query own courses");
+    }
+
+    auto all = courseRepo_.loadAll();
+    all.erase(std::remove_if(all.begin(), all.end(),
+        [&](const Course& c) { return !c.hasTeacher(teacherId); }),
+        all.end());
+    return all;
+}
+
+std::vector<Course> CourseService::listByTeacherAndSemester(const Session& session,
+                                                            const std::string& teacherId,
+                                                            const std::string& semester) {
+    requireLoggedIn(session, "Course.listByTeacherAndSemester");
+    if (teacherId.empty()) {
+        throw ValidationException("Teacher id must not be empty");
+    }
+    if (semester.empty()) {
+        throw ValidationException("Course semester must not be empty");
+    }
+    if (session.isTeacher() && teacherId != session.getOwnerId()) {
+        throw PermissionException("Teacher can only query own courses");
+    }
+
+    auto all = courseRepo_.loadAll();
+    all.erase(std::remove_if(all.begin(), all.end(),
+        [&](const Course& c) {
+            return c.getSemester() != semester || !c.hasTeacher(teacherId);
+        }),
+        all.end());
     return all;
 }
 
@@ -58,7 +131,7 @@ Course CourseService::findById(const Session& session, const std::string& course
     if (it == all.end()) {
         throw ValidationException("Course not found: " + courseId);
     }
-    if (session.isTeacher() && it->getTeacherId() != session.getOwnerId()) {
+    if (session.isTeacher() && !it->hasTeacher(session.getOwnerId())) {
         throw PermissionException("Teacher can only read own courses");
     }
     return *it;
@@ -68,12 +141,7 @@ void CourseService::create(const Session& session, const Course& course) {
     requireAdmin(session, "Course.create");
     validateCourse(course);
 
-    auto teachers = teacherRepo_.loadAll();
-    auto teacherIt = std::find_if(teachers.begin(), teachers.end(),
-        [&](const Teacher& t) { return t.getId() == course.getTeacherId(); });
-    if (teacherIt == teachers.end()) {
-        throw ValidationException("Course teacherId not found: " + course.getTeacherId());
-    }
+    validateCourseTeachers(teacherRepo_, course);
 
     auto courses = courseRepo_.loadAll();
     auto dup = std::find_if(courses.begin(), courses.end(),
@@ -90,12 +158,7 @@ void CourseService::update(const Session& session, const Course& course) {
     requireAdmin(session, "Course.update");
     validateCourse(course);
 
-    auto teachers = teacherRepo_.loadAll();
-    auto teacherIt = std::find_if(teachers.begin(), teachers.end(),
-        [&](const Teacher& t) { return t.getId() == course.getTeacherId(); });
-    if (teacherIt == teachers.end()) {
-        throw ValidationException("Course teacherId not found: " + course.getTeacherId());
-    }
+    validateCourseTeachers(teacherRepo_, course);
 
     auto courses = courseRepo_.loadAll();
     auto it = std::find_if(courses.begin(), courses.end(),

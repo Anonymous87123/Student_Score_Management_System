@@ -36,8 +36,8 @@
    [E1 ghost-teacher upsert C001] PASS
    [E2 ghost-teacher findByCourse C001] PASS
    [E2b ghost-teacher findCourse C001] PASS
-   [E3 teacher course whitelist] PASS (n=1)
-   [E4 teacher score whitelist] PASS (n=3)
+   [E3 teacher course whitelist] PASS (n=5)
+   [E4 teacher score whitelist] PASS (n=140)
    [E5 student cannot read others] PASS
  Week 13         : boundary-check PASSED
 ==============================================

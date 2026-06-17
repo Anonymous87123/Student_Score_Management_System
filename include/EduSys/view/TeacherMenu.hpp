@@ -1,9 +1,13 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "EduSys/view/BaseMenu.hpp"
 
 namespace EduSys {
 
+class Score;
 class Session;
 class AuthService;
 class CourseService;
@@ -27,11 +31,17 @@ public:
 
 private:
     void listMyCourses();
+    void listMyCoursesBySemester();
     void viewMyScores();
+    void viewScoresByStudent();
+    void viewScoresByClass();
+    void viewScoresByCourseAndSemester();
+    void courseRanking();
     void upsertScore();
     void deleteScore();
     void courseStats();
     void changePassword();
+    void printScoreRows(const std::vector<Score>& list, const std::string& emptyText);
 
     // 选一门"我授课"的课程；返回空串表示用户取消或没有授课。
     std::string pickOwnCourseId();

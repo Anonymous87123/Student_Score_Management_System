@@ -6,6 +6,7 @@
 #include "EduSys/service/ScoreService.hpp"
 #include "EduSys/service/StatsService.hpp"
 #include "EduSys/service/StudentService.hpp"
+#include "EduSys/service/TeacherService.hpp"
 #include "EduSys/storage/CourseRepository.hpp"
 #include "EduSys/storage/ScoreRepository.hpp"
 #include "EduSys/storage/StudentRepository.hpp"
@@ -28,6 +29,7 @@ public:
 
     AuthService       authService;
     StudentService    studentService;
+    TeacherService    teacherService;
     CourseService     courseService;
     ScoreService      scoreService;
     StatsService      statsService;

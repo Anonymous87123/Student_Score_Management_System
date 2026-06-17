@@ -88,7 +88,7 @@ CourseStats StatsService::computeCourseStats(const Session& session, const std::
     if (courseIt == courses.end()) {
         throw ValidationException("Course not found: " + courseId);
     }
-    if (session.isTeacher() && courseIt->getTeacherId() != session.getOwnerId()) {
+    if (session.isTeacher() && !courseIt->hasTeacher(session.getOwnerId())) {
         throw PermissionException("Teacher can only query own course stats");
     }
 
@@ -136,7 +136,7 @@ std::vector<RankEntry> StatsService::rankByCourse(const Session& session, const 
     if (courseIt == courses.end()) {
         throw ValidationException("Course not found: " + courseId);
     }
-    if (session.isTeacher() && courseIt->getTeacherId() != session.getOwnerId()) {
+    if (session.isTeacher() && !courseIt->hasTeacher(session.getOwnerId())) {
         throw PermissionException("Teacher can only rank own course");
     }
 

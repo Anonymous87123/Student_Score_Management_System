@@ -47,6 +47,7 @@ void CourseEditDialog::setupUi() {
     creditSpin_->setDecimals(1);
     creditSpin_->setValue(2.0);
     teacherIdEdit_ = new QLineEdit(this);
+    teacherIdEdit_->setPlaceholderText(QString::fromUtf8(u8"例如：T001 或 T001,T002"));
     semesterEdit_ = new QLineEdit(this);
     semesterEdit_->setPlaceholderText(QString::fromUtf8(u8"例如：2025-1"));
 
@@ -87,7 +88,7 @@ void CourseEditDialog::validateAndAccept() {
         return;
     }
     if (teacherIdEdit_->text().trimmed().isEmpty()) {
-        QMessageBox::warning(this, QString::fromUtf8(u8"表单不完整"), QString::fromUtf8(u8"授课教师编号不能为空。"));
+        QMessageBox::warning(this, QString::fromUtf8(u8"表单不完整"), QString::fromUtf8(u8"授课教师编号不能为空；多个教师可用英文逗号分隔。"));
         teacherIdEdit_->setFocus();
         return;
     }

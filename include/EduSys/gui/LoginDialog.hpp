@@ -18,6 +18,7 @@ public:
 
 private:
     void tryLogin();
+    void changePasswordBeforeLogin();
 
     AppContext& appContext_;
     Session     session_;

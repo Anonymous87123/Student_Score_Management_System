@@ -486,3 +486,481 @@
 [2026-06-08 11:57:03] [INFO] EduSys starting up (mode=interactive).
 [2026-06-08 11:57:03] [INFO] Existing data files detected -> skip seeding.
 [2026-06-08 11:57:24] [INFO] Auth OK: 'admin'
+[2026-06-08 17:23:13] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:23:13] [INFO] Existing data files detected -> demo catalog enriched with missing records.
+[2026-06-08 17:23:13] [INFO] Auth OK: 'admin'
+[2026-06-08 17:23:13] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:23:13] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:23:13] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:23:13] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:23:13] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:23:13] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:24:05] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:24:05] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:24:05] [INFO] Auth OK: 'admin'
+[2026-06-08 17:24:05] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:26:53] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:26:53] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:26:53] [INFO] Auth OK: 'admin'
+[2026-06-08 17:26:53] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:26:53] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:26:53] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:26:53] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:26:53] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:26:53] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:35:13] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:35:13] [INFO] Existing data files detected -> demo catalog enriched with missing records.
+[2026-06-08 17:35:13] [INFO] Auth OK: 'admin'
+[2026-06-08 17:35:13] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:35:13] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:35:13] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:35:13] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:35:13] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:35:13] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:35:44] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:35:44] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:35:44] [INFO] Auth OK: 'admin'
+[2026-06-08 17:35:44] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:36:09] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:36:09] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:36:09] [INFO] Auth OK: 'admin'
+[2026-06-08 17:36:09] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:38:00] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:38:00] [INFO] Existing data files detected -> demo catalog enriched with missing records.
+[2026-06-08 17:38:00] [INFO] Auth OK: 'admin'
+[2026-06-08 17:38:00] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:38:00] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:38:00] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:38:00] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:38:00] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:38:00] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:43:34] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:43:34] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:43:34] [INFO] Auth OK: 'admin'
+[2026-06-08 17:43:34] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:43:34] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:43:34] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:43:34] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:43:34] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:43:34] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:43:34] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:43:34] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:43:34] [INFO] Auth OK: 'admin'
+[2026-06-08 17:43:34] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:43:34] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:43:34] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:43:34] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:43:34] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:43:34] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:44:03] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:44:03] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:44:03] [INFO] Auth OK: 'admin'
+[2026-06-08 17:44:03] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:44:19] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:44:19] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:44:19] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:44:19] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:44:19] [INFO] Auth OK: 'admin'
+[2026-06-08 17:44:19] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:44:19] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:44:19] [INFO] Auth OK: 't006'
+[2026-06-08 17:44:19] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:44:19] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:44:19] [INFO] Auth OK: 's101'
+[2026-06-08 17:44:19] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:44:48] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:44:48] [INFO] Existing data files detected -> demo catalog enriched with missing records.
+[2026-06-08 17:44:48] [INFO] Auth OK: 'admin'
+[2026-06-08 17:44:48] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:44:48] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:44:48] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:44:48] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:44:48] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:44:48] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:44:48] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:44:48] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 17:44:48] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:44:48] [INFO] Existing data files detected -> demo catalog enriched with missing records.
+[2026-06-08 17:44:48] [INFO] Auth OK: 'admin'
+[2026-06-08 17:44:48] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:44:48] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:44:48] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:44:48] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:44:48] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:44:48] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:44:48] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:44:48] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:44:48] [INFO] Auth OK: 'admin'
+[2026-06-08 17:44:48] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:44:48] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:44:48] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:44:48] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:44:48] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:44:48] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:47:03] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:03] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:03] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:03] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:03] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:47:03] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:47:03] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:03] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:03] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:03] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:03] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:03] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:47:03] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:47:03] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:03] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:47:03] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:47:03] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:47:03] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:47:03] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:03] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:03] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:03] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:03] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 17:47:03] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:03] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:03] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 17:47:03] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:03] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:03] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:03] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:03] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:47:03] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:47:03] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:04] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:47:04] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:47:04] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:04] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:04] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:04] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:04] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:47:04] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:47:04] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:04] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:47:04] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:47:52] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:52] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:52] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:52] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:52] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 17:47:52] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:52] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:52] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 17:47:52] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:52] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:52] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:52] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:52] [ERROR] Fatal: Unexpected EOF reading: data/scores.dat
+[2026-06-08 17:47:52] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 17:47:52] [INFO] Existing data files detected -> strict load, demo enrichment skipped.
+[2026-06-08 17:47:52] [INFO] Auth OK: 'admin'
+[2026-06-08 17:47:52] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:52] [INFO] Week 11 self-check PASSED.
+[2026-06-08 17:47:52] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 17:47:52] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 17:47:52] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 17:47:52] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 17:48:08] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:48:08] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:48:08] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 17:48:08] [INFO] Existing data files detected -> demo catalog already complete.
+[2026-06-08 17:48:08] [INFO] Auth OK: 'admin'
+[2026-06-08 17:48:08] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 17:48:08] [INFO] Auth OK: 'admin'
+[2026-06-08 17:48:08] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 18:11:40] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 18:11:40] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 18:11:40] [INFO] Auth OK: 'admin'
+[2026-06-08 18:11:40] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:40] [INFO] Week 11 self-check PASSED.
+[2026-06-08 18:11:40] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 18:11:40] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:40] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 18:11:40] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 18:11:41] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 18:11:41] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 18:11:41] [INFO] Auth OK: 'admin'
+[2026-06-08 18:11:41] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:41] [INFO] Week 11 self-check PASSED.
+[2026-06-08 18:11:41] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 18:11:41] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:41] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 18:11:41] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 18:11:41] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 18:11:41] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 18:11:41] [INFO] Auth OK: 'admin'
+[2026-06-08 18:11:41] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:41] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 18:11:41] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 18:11:41] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 18:11:41] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 18:11:41] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 18:11:41] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 18:11:41] [INFO] Auth OK: 'admin'
+[2026-06-08 18:11:41] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:41] [ERROR] Fatal: Unexpected EOF reading: data/scores.dat
+[2026-06-08 18:11:41] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 18:11:41] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 18:11:41] [INFO] Auth OK: 'admin'
+[2026-06-08 18:11:41] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:41] [INFO] Week 11 self-check PASSED.
+[2026-06-08 18:11:41] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 18:11:41] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 18:11:41] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 18:11:41] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 18:16:01] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 18:16:01] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 18:16:01] [INFO] Auth OK: 'admin'
+[2026-06-08 18:16:01] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 19:12:55] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:12:55] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:12:55] [INFO] Auth OK: 'admin'
+[2026-06-08 19:12:55] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:55] [INFO] Week 11 self-check PASSED.
+[2026-06-08 19:12:55] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 19:12:55] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:55] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:12:55] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:12:55] [INFO] Auth OK: 'admin'
+[2026-06-08 19:12:55] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 19:12:55] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:55] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 19:12:55] [INFO] Week 11 self-check PASSED.
+[2026-06-08 19:12:55] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 19:12:55] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:55] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 19:12:55] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 19:12:56] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:12:56] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:12:56] [INFO] Auth OK: 'admin'
+[2026-06-08 19:12:56] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:56] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 19:12:56] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:12:56] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:12:56] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 19:12:56] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:12:56] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:12:56] [INFO] Auth OK: 'admin'
+[2026-06-08 19:12:56] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:56] [ERROR] Fatal: Unexpected EOF reading: data/scores.dat
+[2026-06-08 19:12:56] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:12:56] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:12:56] [INFO] Auth OK: 'admin'
+[2026-06-08 19:12:56] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:56] [INFO] Week 11 self-check PASSED.
+[2026-06-08 19:12:56] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 19:12:56] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:12:56] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 19:12:56] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 19:16:23] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:16:23] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:16:23] [INFO] Auth OK: 'admin'
+[2026-06-08 19:16:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:23] [INFO] Week 11 self-check PASSED.
+[2026-06-08 19:16:23] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 19:16:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:23] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 19:16:23] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 19:16:23] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:16:23] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:16:23] [INFO] Auth OK: 'admin'
+[2026-06-08 19:16:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:23] [INFO] Week 11 self-check PASSED.
+[2026-06-08 19:16:23] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 19:16:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:23] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 19:16:23] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 19:16:23] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:16:23] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:16:23] [INFO] Auth OK: 'admin'
+[2026-06-08 19:16:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:23] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 19:16:24] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:16:24] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:16:24] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 19:16:24] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:16:24] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:16:24] [INFO] Auth OK: 'admin'
+[2026-06-08 19:16:24] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:24] [ERROR] Fatal: Unexpected EOF reading: data/scores.dat
+[2026-06-08 19:16:24] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 19:16:24] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 19:16:24] [INFO] Auth OK: 'admin'
+[2026-06-08 19:16:24] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:24] [INFO] Week 11 self-check PASSED.
+[2026-06-08 19:16:24] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 19:16:24] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 19:16:24] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 19:16:24] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 20:34:56] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 20:34:56] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:34:56] [INFO] Auth OK: 'admin'
+[2026-06-08 20:34:56] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:34:56] [INFO] Week 11 self-check PASSED.
+[2026-06-08 20:34:56] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 20:34:56] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:34:56] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 20:34:56] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 20:35:07] [INFO] EduSys GUI starting up.
+[2026-06-08 20:35:07] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:36:22] [INFO] EduSys GUI starting up.
+[2026-06-08 20:36:22] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:49:54] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 20:49:54] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:49:54] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 20:49:54] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:49:54] [INFO] Auth OK: 'admin'
+[2026-06-08 20:49:54] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:49:54] [INFO] Week 11 self-check PASSED.
+[2026-06-08 20:49:54] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 20:49:54] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:49:54] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 20:49:54] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 20:49:54] [INFO] Auth OK: 's001'
+[2026-06-08 20:49:54] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 20:50:05] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 20:50:05] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:50:05] [INFO] Auth OK: 'admin'
+[2026-06-08 20:50:05] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:50:05] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 20:50:05] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 20:50:05] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:50:05] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 20:50:06] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 20:50:06] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:50:06] [INFO] Auth OK: 'admin'
+[2026-06-08 20:50:06] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:50:06] [ERROR] Fatal: Unexpected EOF reading: data/scores.dat
+[2026-06-08 20:50:06] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 20:50:06] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 20:50:06] [INFO] Auth OK: 'admin'
+[2026-06-08 20:50:06] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:50:06] [INFO] Week 11 self-check PASSED.
+[2026-06-08 20:50:06] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 20:50:06] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 20:50:06] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 20:50:06] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 21:49:07] [INFO] EduSys starting up (mode=interactive).
+[2026-06-08 21:49:07] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:07] [INFO] Auth OK: 's001'
+[2026-06-08 21:49:07] [INFO] EduSys shutdown normally (interactive).
+[2026-06-08 21:49:23] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 21:49:23] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:23] [INFO] Auth OK: 'admin'
+[2026-06-08 21:49:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:23] [INFO] Week 11 self-check PASSED.
+[2026-06-08 21:49:23] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 21:49:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:23] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 21:49:23] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 21:49:23] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 21:49:23] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:23] [INFO] Auth OK: 'admin'
+[2026-06-08 21:49:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:23] [INFO] Week 11 self-check PASSED.
+[2026-06-08 21:49:23] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 21:49:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:23] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 21:49:23] [INFO] EduSys shutdown normally (self-test).
+[2026-06-08 21:49:23] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 21:49:23] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:23] [INFO] Auth OK: 'admin'
+[2026-06-08 21:49:23] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:23] [ERROR] Fatal: Self-check: score for S003 should exist
+[2026-06-08 21:49:23] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 21:49:23] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:23] [ERROR] Fatal: Bad magic in data/users.dat
+[2026-06-08 21:49:24] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 21:49:24] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:24] [INFO] Auth OK: 'admin'
+[2026-06-08 21:49:24] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:24] [ERROR] Fatal: Unexpected EOF reading: data/scores.dat
+[2026-06-08 21:49:24] [INFO] EduSys starting up (mode=self-test).
+[2026-06-08 21:49:24] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-08 21:49:24] [INFO] Auth OK: 'admin'
+[2026-06-08 21:49:24] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:24] [INFO] Week 11 self-check PASSED.
+[2026-06-08 21:49:24] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-08 21:49:24] [WARN] Auth failed: bad password for 'admin'
+[2026-06-08 21:49:24] [INFO] Week 13 boundary check PASSED.
+[2026-06-08 21:49:24] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 15:30:49] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 15:30:49] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 15:30:49] [INFO] Auth OK: 'admin'
+[2026-06-09 15:30:49] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 15:30:49] [INFO] Week 11 self-check PASSED.
+[2026-06-09 15:30:49] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 15:30:49] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 15:30:49] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 15:30:49] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 15:48:21] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 15:48:21] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 15:48:21] [INFO] Auth OK: 'admin'
+[2026-06-09 15:48:21] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 15:48:21] [INFO] Week 11 self-check PASSED.
+[2026-06-09 15:48:21] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 15:48:21] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 15:48:21] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 15:48:21] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 15:49:24] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 15:49:51] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 15:54:17] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 15:54:17] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 15:54:17] [INFO] Auth OK: 'admin'
+[2026-06-09 15:54:17] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 15:54:17] [INFO] Week 11 self-check PASSED.
+[2026-06-09 15:54:17] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 15:54:17] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 15:54:17] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 15:54:17] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 16:11:17] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 16:11:17] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:11:17] [INFO] Auth OK: 'admin'
+[2026-06-09 16:11:17] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:11:17] [INFO] Week 11 self-check PASSED.
+[2026-06-09 16:11:17] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 16:11:17] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:11:17] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 16:11:17] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 16:23:28] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 16:23:28] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:23:28] [INFO] Auth OK: 'admin'
+[2026-06-09 16:23:28] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:23:28] [INFO] Week 11 self-check PASSED.
+[2026-06-09 16:23:28] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 16:23:28] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:23:28] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 16:23:28] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 16:29:19] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 16:29:19] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:29:19] [INFO] Auth OK: 'admin'
+[2026-06-09 16:29:19] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:29:19] [INFO] Week 11 self-check PASSED.
+[2026-06-09 16:29:19] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 16:29:19] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:29:19] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 16:29:19] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 16:45:40] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 16:45:40] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 16:45:40] [INFO] Auth OK: 'admin'
+[2026-06-09 16:45:40] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:45:40] [INFO] Week 11 self-check PASSED.
+[2026-06-09 16:45:40] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 16:45:40] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 16:45:40] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 16:45:40] [INFO] EduSys shutdown normally (self-test).
+[2026-06-09 20:42:35] [INFO] EduSys starting up (mode=self-test).
+[2026-06-09 20:42:35] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-09 20:42:35] [INFO] Auth OK: 'admin'
+[2026-06-09 20:42:35] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 20:42:35] [INFO] Week 11 self-check PASSED.
+[2026-06-09 20:42:35] [WARN] Auth failed: unknown user 'no_such_user'
+[2026-06-09 20:42:35] [WARN] Auth failed: bad password for 'admin'
+[2026-06-09 20:42:35] [INFO] Week 13 boundary check PASSED.
+[2026-06-09 20:42:35] [INFO] EduSys shutdown normally (self-test).
+[2026-06-17 11:46:02] [INFO] EduSys starting up (mode=interactive).
+[2026-06-17 11:46:02] [INFO] Existing data files detected -> loading persisted data without demo refill.
+[2026-06-17 11:46:07] [INFO] Auth OK: 'admin'

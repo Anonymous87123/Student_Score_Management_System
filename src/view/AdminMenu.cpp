@@ -8,6 +8,7 @@
 #include "EduSys/model/Course.hpp"
 #include "EduSys/model/Score.hpp"
 #include "EduSys/model/Student.hpp"
+#include "EduSys/model/Teacher.hpp"
 #include "EduSys/report/ReportExporter.hpp"
 #include "EduSys/service/AuthService.hpp"
 #include "EduSys/service/CourseService.hpp"
@@ -15,6 +16,7 @@
 #include "EduSys/service/Session.hpp"
 #include "EduSys/service/StatsService.hpp"
 #include "EduSys/service/StudentService.hpp"
+#include "EduSys/service/TeacherService.hpp"
 
 namespace EduSys {
 
@@ -44,6 +46,7 @@ void AdminMenu::run() {
                   << " 5. Generate warning report\n"
                   << " 6. Change my password\n"
                   << " 7. Export course CSV (stats + ranking)\n"
+                  << " 8. Teacher management\n"
                   << " 0. Logout\n";
         const int choice = readInt("Select: ");
         try {
@@ -55,6 +58,7 @@ void AdminMenu::run() {
                 case 5: generateWarningReport(); break;
                 case 6: changePassword();        break;
                 case 7: exportCsv();             break;
+                case 8: teacherMenu();           break;
                 case 0: session_.logout();       return;
                 default: printError("Unknown choice");
             }
@@ -136,16 +140,92 @@ void AdminMenu::studentMenu() {
     }
 }
 
+// ============================================================ Teacher
+void AdminMenu::teacherMenu() {
+    while (true) {
+        printHeading("Admin > Teacher Management");
+        std::cout << " 1. List all\n"
+                  << " 2. View by id\n"
+                  << " 3. Add\n"
+                  << " 4. Edit\n"
+                  << " 5. Remove (detach from courses; delete teacherless courses)\n"
+                  << " 0. Back\n";
+        const int choice = readInt("Select: ");
+        try {
+            if (choice == 0) return;
+            if (choice == 1) {
+                auto all = teacherSvc_.listAll(session_);
+                std::vector<std::vector<std::string>> rows;
+                for (const auto& t : all) {
+                    rows.push_back({t.getId(), t.getName(), t.getDepartment(),
+                                    t.getTitle(), t.getContact()});
+                }
+                paginate({"Id", "Name", "Department", "Title", "Contact"},
+                         rows, {8, 14, 24, 18, 20});
+            } else if (choice == 2) {
+                const std::string id = readLine("Teacher id: ");
+                const Teacher t = teacherSvc_.findById(session_, id);
+                std::cout << " Id         : " << t.getId() << "\n"
+                          << " Name       : " << t.getName() << "\n"
+                          << " Department : " << t.getDepartment() << "\n"
+                          << " Title      : " << t.getTitle() << "\n"
+                          << " Contact    : " << t.getContact() << "\n";
+            } else if (choice == 3) {
+                const std::string id         = readLine("Id: ");
+                const std::string name       = readLine("Name: ");
+                const std::string contact    = readLine("Contact: ");
+                const std::string department = readLine("Department: ");
+                const std::string title      = readLine("Title: ");
+                const std::string username   = readLine("Login username (empty = no account): ");
+                std::string password;
+                if (!username.empty()) {
+                    password = readLine("Initial password: ");
+                }
+                Teacher t(id, name, contact, department, title);
+                teacherSvc_.create(session_, t, username, password);
+                printOk("Teacher created: " + id);
+            } else if (choice == 4) {
+                const std::string id = readLine("Id to edit: ");
+                Teacher cur = teacherSvc_.findById(session_, id);
+                const std::string name = readLine("Name [" + cur.getName() + "]: ");
+                const std::string contact = readLine("Contact [" + cur.getContact() + "]: ");
+                const std::string department = readLine("Department [" + cur.getDepartment() + "]: ");
+                const std::string title = readLine("Title [" + cur.getTitle() + "]: ");
+                Teacher updated(id,
+                                name.empty()       ? cur.getName()       : name,
+                                contact.empty()    ? cur.getContact()    : contact,
+                                department.empty() ? cur.getDepartment() : department,
+                                title.empty()      ? cur.getTitle()      : title);
+                teacherSvc_.update(session_, updated);
+                printOk("Teacher updated: " + id);
+            } else if (choice == 5) {
+                const std::string id = readLine("Id to remove: ");
+                const std::string cf = readLine("Type 'yes' to confirm detach/delete: ");
+                if (cf != "yes") { printError("Aborted"); continue; }
+                teacherSvc_.remove(session_, id);
+                printOk("Teacher removed (cascade): " + id);
+            } else {
+                printError("Unknown choice");
+            }
+        } catch (const EduException& e) {
+            printError(e.what());
+        }
+    }
+}
+
 // ============================================================ Course
 void AdminMenu::courseMenu() {
     while (true) {
         printHeading("Admin > Course Management");
         std::cout << " 1. List all\n"
-                  << " 2. View by id\n"
-                  << " 3. Add\n"
-                  << " 4. Edit\n"
-                  << " 5. Remove (cascade scores)\n"
-                  << " 0. Back\n";
+                 << " 2. View by id\n"
+                 << " 3. By semester\n"
+                 << " 4. By teacher\n"
+                 << " 5. By teacher + semester\n"
+                 << " 6. Add\n"
+                 << " 7. Edit\n"
+                 << " 8. Remove (cascade scores)\n"
+                 << " 0. Back\n";
         const int choice = readInt("Select: ");
         try {
             if (choice == 0) return;
@@ -168,20 +248,54 @@ void AdminMenu::courseMenu() {
                           << " Teacher  : " << c.getTeacherId() << "\n"
                           << " Semester : " << c.getSemester() << "\n";
             } else if (choice == 3) {
+                const std::string semester = readLine("Semester: ");
+                auto all = courseSvc_.listBySemester(session_, semester);
+                std::vector<std::vector<std::string>> rows;
+                for (const auto& c : all) {
+                    rows.push_back({c.getCourseId(), c.getCourseName(),
+                                    fmtDouble(c.getCredit(), 1),
+                                    c.getTeacherId(), c.getSemester()});
+                }
+                paginate({"CId", "CourseName", "Cred", "TeaId", "Semester"},
+                         rows, {6, 28, 5, 6, 12});
+            } else if (choice == 4) {
+                const std::string teacherId = readLine("Teacher id: ");
+                auto all = courseSvc_.listByTeacher(session_, teacherId);
+                std::vector<std::vector<std::string>> rows;
+                for (const auto& c : all) {
+                    rows.push_back({c.getCourseId(), c.getCourseName(),
+                                    fmtDouble(c.getCredit(), 1),
+                                    c.getTeacherId(), c.getSemester()});
+                }
+                paginate({"CId", "CourseName", "Cred", "TeaId", "Semester"},
+                         rows, {6, 28, 5, 6, 12});
+            } else if (choice == 5) {
+                const std::string teacherId = readLine("Teacher id: ");
+                const std::string semester = readLine("Semester: ");
+                auto all = courseSvc_.listByTeacherAndSemester(session_, teacherId, semester);
+                std::vector<std::vector<std::string>> rows;
+                for (const auto& c : all) {
+                    rows.push_back({c.getCourseId(), c.getCourseName(),
+                                    fmtDouble(c.getCredit(), 1),
+                                    c.getTeacherId(), c.getSemester()});
+                }
+                paginate({"CId", "CourseName", "Cred", "TeaId", "Semester"},
+                         rows, {6, 28, 5, 6, 12});
+            } else if (choice == 6) {
                 const std::string id       = readLine("Course id: ");
                 const std::string name     = readLine("Course name: ");
                 const double      credit   = readDouble("Credit: ");
-                const std::string teacher  = readLine("Teacher id: ");
+                const std::string teacher  = readLine("Teacher id(s), comma separated: ");
                 const std::string semester = readLine("Semester: ");
                 Course c(id, name, credit, teacher, semester);
                 courseSvc_.create(session_, c);
                 printOk("Course created: " + id);
-            } else if (choice == 4) {
+            } else if (choice == 7) {
                 const std::string id = readLine("Course id to edit: ");
                 Course cur = courseSvc_.findById(session_, id);
                 const std::string name    = readLine("Name [" + cur.getCourseName() + "]: ");
                 const std::string credStr = readLine("Credit [" + fmtDouble(cur.getCredit(), 1) + "]: ");
-                const std::string teacher = readLine("TeacherId [" + cur.getTeacherId() + "]: ");
+                const std::string teacher = readLine("TeacherId(s) [" + cur.getTeacherId() + "]: ");
                 const std::string semester= readLine("Semester [" + cur.getSemester() + "]: ");
                 Course updated(id,
                                name.empty()     ? cur.getCourseName() : name,
@@ -190,7 +304,7 @@ void AdminMenu::courseMenu() {
                                semester.empty() ? cur.getSemester()   : semester);
                 courseSvc_.update(session_, updated);
                 printOk("Course updated: " + id);
-            } else if (choice == 5) {
+            } else if (choice == 8) {
                 const std::string id = readLine("Course id to remove: ");
                 const std::string cf = readLine("Type 'yes' to confirm cascade delete: ");
                 if (cf != "yes") { printError("Aborted"); continue; }
@@ -212,8 +326,9 @@ void AdminMenu::scoreMenu() {
         std::cout << " 1. List all\n"
                   << " 2. By student\n"
                   << " 3. By course\n"
-                  << " 4. Upsert (add or update)\n"
-                  << " 5. Remove one score\n"
+                  << " 4. By class\n"
+                  << " 5. Upsert (add or update)\n"
+                  << " 6. Remove one score\n"
                   << " 0. Back\n";
         const int choice = readInt("Select: ");
         try {
@@ -254,6 +369,18 @@ void AdminMenu::scoreMenu() {
                 printTable({"StuId", "Semester", "Usual", "Final", "Total"},
                            rows, {6, 12, 6, 6, 6});
             } else if (choice == 4) {
+                const std::string klass = readLine("Class: ");
+                auto list = scoreSvc_.findByClass(session_, klass);
+                std::vector<std::vector<std::string>> rows;
+                for (const auto& s : list) {
+                    rows.push_back({s.getStudentId(), s.getCourseId(), s.getSemester(),
+                                    fmtDouble(s.getUsualScore()),
+                                    fmtDouble(s.getFinalScore()),
+                                    fmtDouble(s.getTotalScore())});
+                }
+                paginate({"StuId", "CId", "Semester", "Usual", "Final", "Total"},
+                         rows, {6, 6, 12, 6, 6, 6});
+            } else if (choice == 5) {
                 const std::string sid = readLine("Student id: ");
                 const std::string cid = readLine("Course id: ");
                 const std::string sem = readLine("Semester: ");
@@ -263,7 +390,7 @@ void AdminMenu::scoreMenu() {
                 Score s(sid, cid, sem, usual, final, total);
                 scoreSvc_.upsert(session_, s);
                 printOk("Score upserted: " + sid + "/" + cid + "/" + sem);
-            } else if (choice == 5) {
+            } else if (choice == 6) {
                 const std::string sid = readLine("Student id: ");
                 const std::string cid = readLine("Course id: ");
                 const std::string sem = readLine("Semester: ");

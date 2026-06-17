@@ -25,6 +25,7 @@ set(EDUSYS_CORE_SOURCES
     src/report/ReportExporter.cpp
     src/service/AuthService.cpp
     src/service/StudentService.cpp
+    src/service/TeacherService.cpp
     src/service/CourseService.cpp
     src/service/ScoreService.cpp
     src/service/StatsService.cpp
@@ -42,11 +43,15 @@ set(EDUSYS_CLI_SOURCES
 
 set(EDUSYS_GUI_SOURCES
     src/app/gui_main.cpp
+    src/gui/BackgroundHostWidget.cpp
+    src/gui/BackgroundSettings.cpp
     src/gui/LoginDialog.cpp
     src/gui/AdminWindow.cpp
     src/gui/StudentEditDialog.cpp
+    src/gui/TeacherEditDialog.cpp
     src/gui/CourseEditDialog.cpp
     src/gui/ScoreEditDialog.cpp
+    src/gui/ScoreBarChartWidget.cpp
     src/gui/ChangePasswordDialog.cpp
     src/gui/TeacherWindow.cpp
     src/gui/StudentWindow.cpp

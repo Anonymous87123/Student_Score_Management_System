@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <unordered_set>
 
 #include "EduSys/common/Constants.hpp"
 #include "EduSys/common/Exception.hpp"
@@ -65,7 +66,7 @@ std::vector<Score> ScoreService::listAll(const Session& session) {
             [&](const Score& s) {
                 auto it = std::find_if(courses.begin(), courses.end(),
                     [&](const Course& c) { return c.getCourseId() == s.getCourseId(); });
-                return it == courses.end() || it->getTeacherId() != session.getOwnerId();
+                return it == courses.end() || !it->hasTeacher(session.getOwnerId());
             }),
             all.end());
         return all;
@@ -74,52 +75,210 @@ std::vector<Score> ScoreService::listAll(const Session& session) {
     return all;
 }
 
-std::vector<Score> ScoreService::findByStudent(const Session& session, const std::string& studentId) {
+std::vector<Score> ScoreService::query(const Session& session,
+                                       const std::string& studentId,
+                                       const std::string& courseId,
+                                       const std::string& className,
+                                       const std::string& semester) {
     if (!session.isLoggedIn()) {
-        throw AuthException("Not logged in (op=Score.findByStudent)");
+        throw AuthException("Not logged in (op=Score.query)");
     }
-    if (session.isStudent() && studentId != session.getOwnerId()) {
+    if (session.isStudent() && !studentId.empty() && studentId != session.getOwnerId()) {
         throw PermissionException("Student can only read own scores");
     }
-    auto all = scoreRepo_.loadAll();
-    all.erase(std::remove_if(all.begin(), all.end(),
-        [&](const Score& s) { return s.getStudentId() != studentId; }),
-        all.end());
-
-    if (session.isTeacher()) {
-        auto courses = courseRepo_.loadAll();
-        all.erase(std::remove_if(all.begin(), all.end(),
-            [&](const Score& s) {
-                auto it = std::find_if(courses.begin(), courses.end(),
-                    [&](const Course& c) { return c.getCourseId() == s.getCourseId(); });
-                return it == courses.end() || it->getTeacherId() != session.getOwnerId();
-            }),
-            all.end());
-    }
-    return all;
-}
-
-std::vector<Score> ScoreService::findByCourse(const Session& session, const std::string& courseId) {
-    if (!session.isLoggedIn()) {
-        throw AuthException("Not logged in (op=Score.findByCourse)");
-    }
-    if (session.isTeacher()) {
+    if (session.isTeacher() && !courseId.empty()) {
         Course c = requireCourse(courseRepo_, courseId);
-        if (c.getTeacherId() != session.getOwnerId()) {
+        if (!c.hasTeacher(session.getOwnerId())) {
             throw PermissionException("Teacher can only read scores of own courses");
         }
     }
-    auto all = scoreRepo_.loadAll();
-    all.erase(std::remove_if(all.begin(), all.end(),
-        [&](const Score& s) { return s.getCourseId() != courseId; }),
-        all.end());
-
-    if (session.isStudent()) {
-        all.erase(std::remove_if(all.begin(), all.end(),
-            [&](const Score& s) { return s.getStudentId() != session.getOwnerId(); }),
-            all.end());
+    if (session.isTeacher() && courseId.empty()) {
+        auto teacherCourses = courseRepo_.loadAll();
+        teacherCourses.erase(std::remove_if(teacherCourses.begin(), teacherCourses.end(),
+            [&](const Course& c) { return !c.hasTeacher(session.getOwnerId()); }),
+            teacherCourses.end());
+        if (!className.empty()) {
+            const auto classStudents = studentRepo_.loadAll();
+            std::unordered_set<std::string> allowedStudentIds;
+            for (const auto& student : classStudents) {
+                if (student.getClassName() == className) {
+                    allowedStudentIds.insert(student.getId());
+                }
+            }
+            auto filtered = listAll(session);
+            filtered.erase(std::remove_if(filtered.begin(), filtered.end(),
+                [&](const Score& score) {
+                    if (allowedStudentIds.find(score.getStudentId()) == allowedStudentIds.end()) {
+                        return true;
+                    }
+                    const auto it = std::find_if(teacherCourses.begin(), teacherCourses.end(),
+                        [&](const Course& c) { return c.getCourseId() == score.getCourseId(); });
+                    return it == teacherCourses.end();
+                }),
+                filtered.end());
+            if (!semester.empty()) {
+                filtered.erase(std::remove_if(filtered.begin(), filtered.end(),
+                    [&](const Score& score) { return score.getSemester() != semester; }),
+                    filtered.end());
+            }
+            if (!studentId.empty()) {
+                filtered.erase(std::remove_if(filtered.begin(), filtered.end(),
+                    [&](const Score& score) { return score.getStudentId() != studentId; }),
+                    filtered.end());
+            }
+            return filtered;
+        }
     }
-    return all;
+
+    std::unordered_set<std::string> classStudentIds;
+    if (!className.empty()) {
+        const auto students = studentRepo_.loadAll();
+        for (const auto& student : students) {
+            if (student.getClassName() == className) {
+                classStudentIds.insert(student.getId());
+            }
+        }
+    }
+
+    auto scores = listAll(session);
+    scores.erase(std::remove_if(scores.begin(), scores.end(),
+        [&](const Score& score) {
+            if (!studentId.empty() && score.getStudentId() != studentId) {
+                return true;
+            }
+            if (!courseId.empty() && score.getCourseId() != courseId) {
+                return true;
+            }
+            if (!semester.empty() && score.getSemester() != semester) {
+                return true;
+            }
+            if (!className.empty() && classStudentIds.find(score.getStudentId()) == classStudentIds.end()) {
+                return true;
+            }
+            return false;
+        }),
+        scores.end());
+    return scores;
+}
+
+std::vector<Score> ScoreService::findByStudent(const Session& session, const std::string& studentId) {
+    if (studentId.empty()) {
+        throw ValidationException("Student id must not be empty");
+    }
+    return query(session, studentId, {}, {}, {});
+}
+
+std::vector<Score> ScoreService::findByCourse(const Session& session, const std::string& courseId) {
+    if (courseId.empty()) {
+        throw ValidationException("Course id must not be empty");
+    }
+    return query(session, {}, courseId, {}, {});
+}
+
+std::vector<Score> ScoreService::findByClass(const Session& session, const std::string& className) {
+    if (className.empty()) {
+        throw ValidationException("Class name must not be empty");
+    }
+    return query(session, {}, {}, className, {});
+}
+
+std::vector<Score> ScoreService::findBySemester(const Session& session, const std::string& semester) {
+    if (semester.empty()) {
+        throw ValidationException("Semester must not be empty");
+    }
+    return query(session, {}, {}, {}, semester);
+}
+
+std::vector<Score> ScoreService::findByStudentAndCourse(const Session& session,
+                                                        const std::string& studentId,
+                                                        const std::string& courseId) {
+    if (studentId.empty()) {
+        throw ValidationException("Student id must not be empty");
+    }
+    if (courseId.empty()) {
+        throw ValidationException("Course id must not be empty");
+    }
+    return query(session, studentId, courseId, {}, {});
+}
+
+std::vector<Score> ScoreService::findByStudentAndSemester(const Session& session,
+                                                          const std::string& studentId,
+                                                          const std::string& semester) {
+    if (studentId.empty()) {
+        throw ValidationException("Student id must not be empty");
+    }
+    if (semester.empty()) {
+        throw ValidationException("Semester must not be empty");
+    }
+    return query(session, studentId, {}, {}, semester);
+}
+
+std::vector<Score> ScoreService::findByStudentCourseAndSemester(const Session& session,
+                                                                const std::string& studentId,
+                                                                const std::string& courseId,
+                                                                const std::string& semester) {
+    if (studentId.empty()) {
+        throw ValidationException("Student id must not be empty");
+    }
+    if (courseId.empty()) {
+        throw ValidationException("Course id must not be empty");
+    }
+    if (semester.empty()) {
+        throw ValidationException("Semester must not be empty");
+    }
+    return query(session, studentId, courseId, {}, semester);
+}
+
+std::vector<Score> ScoreService::findByCourseAndSemester(const Session& session,
+                                                         const std::string& courseId,
+                                                         const std::string& semester) {
+    if (courseId.empty()) {
+        throw ValidationException("Course id must not be empty");
+    }
+    if (semester.empty()) {
+        throw ValidationException("Semester must not be empty");
+    }
+    return query(session, {}, courseId, {}, semester);
+}
+
+std::vector<Score> ScoreService::findByClassAndSemester(const Session& session,
+                                                        const std::string& className,
+                                                        const std::string& semester) {
+    if (className.empty()) {
+        throw ValidationException("Class name must not be empty");
+    }
+    if (semester.empty()) {
+        throw ValidationException("Semester must not be empty");
+    }
+    return query(session, {}, {}, className, semester);
+}
+
+std::vector<Score> ScoreService::findByCourseAndClass(const Session& session,
+                                                      const std::string& courseId,
+                                                      const std::string& className) {
+    if (courseId.empty()) {
+        throw ValidationException("Course id must not be empty");
+    }
+    if (className.empty()) {
+        throw ValidationException("Class name must not be empty");
+    }
+    return query(session, {}, courseId, className, {});
+}
+
+std::vector<Score> ScoreService::findByCourseClassAndSemester(const Session& session,
+                                                              const std::string& courseId,
+                                                              const std::string& className,
+                                                              const std::string& semester) {
+    if (courseId.empty()) {
+        throw ValidationException("Course id must not be empty");
+    }
+    if (className.empty()) {
+        throw ValidationException("Class name must not be empty");
+    }
+    if (semester.empty()) {
+        throw ValidationException("Semester must not be empty");
+    }
+    return query(session, {}, courseId, className, semester);
 }
 
 void ScoreService::upsert(const Session& session, const Score& score) {
@@ -143,7 +302,7 @@ void ScoreService::upsert(const Session& session, const Score& score) {
     Course course = requireCourse(courseRepo_, score.getCourseId());
 
     // 教师只能改自己授课的课程
-    if (session.isTeacher() && course.getTeacherId() != session.getOwnerId()) {
+    if (session.isTeacher() && !course.hasTeacher(session.getOwnerId())) {
         throw PermissionException("Teacher can only write scores of own courses");
     }
 
@@ -179,7 +338,7 @@ void ScoreService::remove(const Session& session,
     }
     if (session.isTeacher()) {
         Course course = requireCourse(courseRepo_, courseId);
-        if (course.getTeacherId() != session.getOwnerId()) {
+        if (!course.hasTeacher(session.getOwnerId())) {
             throw PermissionException("Teacher can only delete scores of own courses");
         }
     }

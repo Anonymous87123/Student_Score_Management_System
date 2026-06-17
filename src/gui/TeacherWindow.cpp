@@ -1,15 +1,20 @@
 #include "EduSys/gui/TeacherWindow.hpp"
 
+#include <algorithm>
 #include <utility>
+#include <unordered_map>
 #include <vector>
 
 #include <QAbstractItemView>
+#include <QCollator>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QLocale>
 #include <QPushButton>
 #include <QStatusBar>
 #include <QTableWidget>
@@ -17,14 +22,19 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QSlider>
 
 #include "EduSys/app/AppContext.hpp"
+#include "EduSys/gui/BackgroundHostWidget.hpp"
+#include "EduSys/gui/BackgroundSettings.hpp"
 #include "EduSys/gui/ChangePasswordDialog.hpp"
 #include "EduSys/gui/ScoreEditDialog.hpp"
 #include "EduSys/model/Score.hpp"
 #include "EduSys/service/StatsService.hpp"
 
 namespace {
+
+constexpr const char* kTeacherBackgroundRoleKey = "teacher";
 
 QTableWidgetItem* createReadOnlyItem(const QString& text) {
     auto* item = new QTableWidgetItem(text);
@@ -42,6 +52,146 @@ void configureTable(QTableWidget* table) {
     table->verticalHeader()->setVisible(false);
 }
 
+std::string lookupStudentName(const std::unordered_map<std::string, std::string>& names,
+                              const std::string& studentId) {
+    const auto it = names.find(studentId);
+    return it == names.end() ? std::string{} : it->second;
+}
+
+void sortScoresByStudentId(std::vector<EduSys::Score>& scores) {
+    QCollator collator(QLocale::c());
+    collator.setCaseSensitivity(Qt::CaseInsensitive);
+    collator.setNumericMode(true);
+
+    std::sort(scores.begin(), scores.end(), [&](const EduSys::Score& lhs, const EduSys::Score& rhs) {
+        const int idCompare = collator.compare(
+            QString::fromStdString(lhs.getStudentId()),
+            QString::fromStdString(rhs.getStudentId()));
+        if (idCompare != 0) {
+            return idCompare < 0;
+        }
+        return QString::fromStdString(lhs.getSemester()) < QString::fromStdString(rhs.getSemester());
+    });
+}
+
+void sortScoresByStudentName(std::vector<EduSys::Score>& scores,
+                             const std::unordered_map<std::string, std::string>& names) {
+    QCollator collator(QLocale(QLocale::Chinese, QLocale::China));
+    collator.setCaseSensitivity(Qt::CaseInsensitive);
+    collator.setNumericMode(true);
+
+    std::sort(scores.begin(), scores.end(), [&](const EduSys::Score& lhs, const EduSys::Score& rhs) {
+        const int nameCompare = collator.compare(
+            QString::fromStdString(lookupStudentName(names, lhs.getStudentId())),
+            QString::fromStdString(lookupStudentName(names, rhs.getStudentId())));
+        if (nameCompare != 0) {
+            return nameCompare < 0;
+        }
+        return collator.compare(
+            QString::fromStdString(lhs.getStudentId()),
+            QString::fromStdString(rhs.getStudentId())) < 0;
+    });
+}
+
+void sortScoresByTotalDesc(std::vector<EduSys::Score>& scores) {
+    QCollator collator(QLocale::c());
+    collator.setCaseSensitivity(Qt::CaseInsensitive);
+    collator.setNumericMode(true);
+
+    std::sort(scores.begin(), scores.end(), [&](const EduSys::Score& lhs, const EduSys::Score& rhs) {
+        if (lhs.getTotalScore() != rhs.getTotalScore()) {
+            return lhs.getTotalScore() > rhs.getTotalScore();
+        }
+        return collator.compare(
+            QString::fromStdString(lhs.getStudentId()),
+            QString::fromStdString(rhs.getStudentId())) < 0;
+    });
+}
+
+void applyLightTheme(QWidget* root) {
+    root->setAttribute(Qt::WA_StyledBackground, true);
+    root->setStyleSheet(QString::fromLatin1(R"(
+        QMainWindow {
+            background-color: #f5f8fc;
+        }
+        QWidget#RoleBackgroundPage {
+            background-color: transparent;
+        }
+        QWidget {
+            color: #1f2937;
+            font-size: 13px;
+        }
+        QTabWidget::pane {
+            background-color: rgba(248, 251, 255, 210);
+            border: 1px solid #d6e0ee;
+            top: -1px;
+        }
+        QTabBar::tab {
+            background-color: #eaf0f7;
+            color: #334155;
+            border: 1px solid #d6e0ee;
+            border-bottom: none;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            padding: 8px 14px;
+            min-width: 96px;
+        }
+        QTabBar::tab:selected {
+            background-color: #ffffff;
+            color: #0f172a;
+        }
+        QTabBar::tab:hover {
+            background-color: #f4f8fc;
+        }
+        QTableWidget {
+            background-color: #ffffff;
+            alternate-background-color: #f8fbff;
+            gridline-color: #dbe4ee;
+            selection-background-color: #cfe3ff;
+            selection-color: #0f172a;
+        }
+        QHeaderView::section {
+            background-color: #edf3f8;
+            color: #334155;
+            border: 1px solid #d6e0ee;
+            padding: 6px 8px;
+        }
+        QLineEdit, QComboBox {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 8px;
+            selection-background-color: #bfdbfe;
+        }
+        QPushButton {
+            background-color: #ffffff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 7px 14px;
+        }
+        QPushButton:hover {
+            background-color: #f8fbff;
+            border-color: #7fb0e9;
+        }
+        QPushButton:pressed {
+            background-color: #eaf2ff;
+        }
+        QPushButton:disabled {
+            background-color: #edf2f7;
+            color: #94a3b8;
+            border-color: #dbe4ee;
+        }
+        QLabel {
+            color: #1f2937;
+        }
+        QStatusBar {
+            background-color: #f8fbff;
+            color: #475569;
+        }
+    )"));
+}
+
 } // namespace
 
 namespace EduSys {
@@ -52,12 +202,14 @@ TeacherWindow::TeacherWindow(AppContext& appContext, Session session, QWidget* p
     , session_(std::move(session)) {
     setWindowTitle(QString::fromUtf8(u8"EduSys 教师端"));
     resize(1000, 680);
+    applyLightTheme(this);
 
     auto* tabs = new QTabWidget(this);
     tabs->addTab(createMyCoursesPage(), QString::fromUtf8(u8"我的课程"));
     tabs->addTab(createMyScoresPage(), QString::fromUtf8(u8"我的课程成绩"));
     tabs->addTab(createMyStatsPage(), QString::fromUtf8(u8"我的课程统计"));
     tabs->addTab(createAccountPage(), QString::fromUtf8(u8"账户"));
+    tabs->addTab(createBackgroundSettingsPage(), QString::fromUtf8(u8"背景设置"));
 
     setCentralWidget(tabs);
     statusBar()->showMessage(
@@ -74,14 +226,20 @@ std::vector<Course> TeacherWindow::myCourses() {
 // ---------------------------------------------------------------------------
 
 QWidget* TeacherWindow::createMyCoursesPage() {
-    auto* page = new QWidget(this);
+    auto* page = createBackgroundPage();
     auto* rootLayout = new QVBoxLayout(page);
 
     auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>我的课程</b>"), page);
     rootLayout->addWidget(titleLabel);
 
-    auto* refreshButton = new QPushButton(QString::fromUtf8(u8"刷新"), page);
-    rootLayout->addWidget(refreshButton);
+    auto* filterLayout = new QHBoxLayout();
+    filterLayout->addWidget(new QLabel(QString::fromUtf8(u8"学期"), page));
+    courseSemesterFilter_ = new QLineEdit(page);
+    courseSemesterFilter_->setPlaceholderText(QString::fromUtf8(u8"留空=全部，如 2025-2026-1"));
+    filterLayout->addWidget(courseSemesterFilter_, 1);
+    auto* refreshButton = new QPushButton(QString::fromUtf8(u8"查询课程"), page);
+    filterLayout->addWidget(refreshButton);
+    rootLayout->addLayout(filterLayout);
 
     courseTable_ = new QTableWidget(page);
     courseTable_->setColumnCount(4);
@@ -102,7 +260,11 @@ QWidget* TeacherWindow::createMyCoursesPage() {
 
 void TeacherWindow::refreshMyCourses() {
     try {
-        const auto courses = myCourses();
+        const QString semester = courseSemesterFilter_ ? courseSemesterFilter_->text().trimmed() : QString();
+        const auto courses = semester.isEmpty()
+            ? myCourses()
+            : appContext_.courseService.listByTeacherAndSemester(
+                session_, session_.getOwnerId(), semester.toStdString());
         courseTable_->setRowCount(static_cast<int>(courses.size()));
 
         int row = 0;
@@ -115,7 +277,7 @@ void TeacherWindow::refreshMyCourses() {
         }
 
         statusBar()->showMessage(
-            QString::fromUtf8(u8"我的课程已刷新，共 %1 门。").arg(courses.size()), 4000);
+            QString::fromUtf8(u8"我的课程已查询，共 %1 门。").arg(courses.size()), 4000);
     } catch (const std::exception& e) {
         showServiceError(QString::fromUtf8(u8"刷新我的课程失败"), e);
     }
@@ -126,7 +288,7 @@ void TeacherWindow::refreshMyCourses() {
 // ---------------------------------------------------------------------------
 
 QWidget* TeacherWindow::createMyScoresPage() {
-    auto* page = new QWidget(this);
+    auto* page = createBackgroundPage();
     auto* rootLayout = new QVBoxLayout(page);
 
     auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>我的课程成绩</b>"), page);
@@ -135,7 +297,23 @@ QWidget* TeacherWindow::createMyScoresPage() {
     auto* filterLayout = new QHBoxLayout();
     filterLayout->addWidget(new QLabel(QString::fromUtf8(u8"选择课程"), page));
     scoreCourseCombo_ = new QComboBox(page);
+    scoreCourseCombo_->addItem(QString::fromUtf8(u8"全部课程"), QString());
     filterLayout->addWidget(scoreCourseCombo_, 1);
+    filterLayout->addWidget(new QLabel(QString::fromUtf8(u8"学生"), page));
+    scoreStudentFilter_ = new QLineEdit(page);
+    scoreStudentFilter_->setPlaceholderText(QString::fromUtf8(u8"留空=全部"));
+    scoreStudentFilter_->setMaximumWidth(140);
+    filterLayout->addWidget(scoreStudentFilter_);
+    filterLayout->addWidget(new QLabel(QString::fromUtf8(u8"班级"), page));
+    scoreClassFilter_ = new QLineEdit(page);
+    scoreClassFilter_->setPlaceholderText(QString::fromUtf8(u8"留空=全部"));
+    scoreClassFilter_->setMaximumWidth(140);
+    filterLayout->addWidget(scoreClassFilter_);
+    filterLayout->addWidget(new QLabel(QString::fromUtf8(u8"学期"), page));
+    scoreSemesterFilter_ = new QLineEdit(page);
+    scoreSemesterFilter_->setPlaceholderText(QString::fromUtf8(u8"留空=全部"));
+    scoreSemesterFilter_->setMaximumWidth(140);
+    filterLayout->addWidget(scoreSemesterFilter_);
     auto* loadButton = new QPushButton(QString::fromUtf8(u8"加载成绩"), page);
     filterLayout->addWidget(loadButton);
     rootLayout->addLayout(filterLayout);
@@ -144,16 +322,25 @@ QWidget* TeacherWindow::createMyScoresPage() {
     auto* createButton = new QPushButton(QString::fromUtf8(u8"录入成绩"), page);
     auto* editButton = new QPushButton(QString::fromUtf8(u8"编辑选中"), page);
     auto* removeButton = new QPushButton(QString::fromUtf8(u8"删除选中"), page);
+    auto* sortByIdButton = new QPushButton(QString::fromUtf8(u8"按学号排序"), page);
+    auto* sortByNameButton = new QPushButton(QString::fromUtf8(u8"按姓氏首字母排序"), page);
+    auto* sortByTotalButton = new QPushButton(QString::fromUtf8(u8"按成绩排序"), page);
     actionLayout->addWidget(createButton);
     actionLayout->addWidget(editButton);
     actionLayout->addWidget(removeButton);
+    actionLayout->addSpacing(18);
+    actionLayout->addWidget(new QLabel(QString::fromUtf8(u8"排序"), page));
+    actionLayout->addWidget(sortByIdButton);
+    actionLayout->addWidget(sortByNameButton);
+    actionLayout->addWidget(sortByTotalButton);
     actionLayout->addStretch();
     rootLayout->addLayout(actionLayout);
 
     scoreTable_ = new QTableWidget(page);
-    scoreTable_->setColumnCount(6);
+    scoreTable_->setColumnCount(7);
     scoreTable_->setHorizontalHeaderLabels({
         QString::fromUtf8(u8"学号"),
+        QString::fromUtf8(u8"姓名"),
         QString::fromUtf8(u8"课程号"),
         QString::fromUtf8(u8"学期"),
         QString::fromUtf8(u8"平时"),
@@ -167,6 +354,9 @@ QWidget* TeacherWindow::createMyScoresPage() {
     connect(createButton, &QPushButton::clicked, this, [this] { createScore(); });
     connect(editButton, &QPushButton::clicked, this, [this] { editSelectedScore(); });
     connect(removeButton, &QPushButton::clicked, this, [this] { removeSelectedScore(); });
+    connect(sortByIdButton, &QPushButton::clicked, this, [this] { showScoresSortedByStudentId(); });
+    connect(sortByNameButton, &QPushButton::clicked, this, [this] { showScoresSortedByStudentName(); });
+    connect(sortByTotalButton, &QPushButton::clicked, this, [this] { showScoresSortedByTotalDesc(); });
     connect(scoreTable_, &QTableWidget::cellDoubleClicked, this, [this](int, int) {
         editSelectedScore();
     });
@@ -186,30 +376,71 @@ QWidget* TeacherWindow::createMyScoresPage() {
 
 void TeacherWindow::refreshMyScores() {
     const QString courseId = scoreCourseCombo_->currentData().toString();
-    if (courseId.isEmpty()) {
-        QMessageBox::information(this, QString::fromUtf8(u8"未选择课程"), QString::fromUtf8(u8"请先选择一门课程。"));
-        return;
-    }
+    const QString studentId = scoreStudentFilter_ ? scoreStudentFilter_->text().trimmed() : QString();
+    const QString className = scoreClassFilter_ ? scoreClassFilter_->text().trimmed() : QString();
+    const QString semester = scoreSemesterFilter_ ? scoreSemesterFilter_->text().trimmed() : QString();
 
     try {
-        const auto scores = appContext_.scoreService.findByCourse(session_, courseId.toStdString());
-        scoreTable_->setRowCount(static_cast<int>(scores.size()));
-
-        int row = 0;
-        for (const auto& s : scores) {
-            scoreTable_->setItem(row, 0, createReadOnlyItem(QString::fromStdString(s.getStudentId())));
-            scoreTable_->setItem(row, 1, createReadOnlyItem(QString::fromStdString(s.getCourseId())));
-            scoreTable_->setItem(row, 2, createReadOnlyItem(QString::fromStdString(s.getSemester())));
-            scoreTable_->setItem(row, 3, createReadOnlyItem(QString::number(s.getUsualScore(), 'f', 1)));
-            scoreTable_->setItem(row, 4, createReadOnlyItem(QString::number(s.getFinalScore(), 'f', 1)));
-            scoreTable_->setItem(row, 5, createReadOnlyItem(QString::number(s.getTotalScore(), 'f', 1)));
-            ++row;
+        scoreRows_ = appContext_.scoreService.query(
+            session_,
+            studentId.toStdString(),
+            courseId.toStdString(),
+            className.toStdString(),
+            semester.toStdString());
+        scoreStudentNames_.clear();
+        for (const auto& student : appContext_.studentService.listAll(session_)) {
+            scoreStudentNames_[student.getId()] = student.getName();
         }
 
+        sortScoresByStudentId(scoreRows_);
+        populateScoreTable();
+
         statusBar()->showMessage(
-            QString::fromUtf8(u8"课程 %1 成绩已加载，共 %2 条。").arg(courseId).arg(scores.size()), 4000);
+            QString::fromUtf8(u8"课程 %1 成绩已加载，共 %2 条。").arg(courseId).arg(scoreRows_.size()), 4000);
     } catch (const std::exception& e) {
         showServiceError(QString::fromUtf8(u8"加载成绩失败"), e);
+    }
+}
+
+void TeacherWindow::showScoresSortedByStudentId() {
+    sortScoresByStudentId(scoreRows_);
+    populateScoreTable();
+    statusBar()->showMessage(QString::fromUtf8(u8"课程成绩已按学号排序。"), 4000);
+}
+
+void TeacherWindow::showScoresSortedByStudentName() {
+    sortScoresByStudentName(scoreRows_, scoreStudentNames_);
+    populateScoreTable();
+    statusBar()->showMessage(QString::fromUtf8(u8"课程成绩已按姓氏首字母排序。"), 4000);
+}
+
+void TeacherWindow::showScoresSortedByTotalDesc() {
+    sortScoresByTotalDesc(scoreRows_);
+    populateScoreTable();
+    statusBar()->showMessage(QString::fromUtf8(u8"课程成绩已按总评从高到低排序。"), 4000);
+}
+
+QString TeacherWindow::studentNameFor(const std::string& studentId) const {
+    const auto it = scoreStudentNames_.find(studentId);
+    if (it == scoreStudentNames_.end()) {
+        return QStringLiteral("-");
+    }
+    return QString::fromStdString(it->second);
+}
+
+void TeacherWindow::populateScoreTable() {
+    scoreTable_->setRowCount(static_cast<int>(scoreRows_.size()));
+
+    int row = 0;
+    for (const auto& s : scoreRows_) {
+        scoreTable_->setItem(row, 0, createReadOnlyItem(QString::fromStdString(s.getStudentId())));
+        scoreTable_->setItem(row, 1, createReadOnlyItem(studentNameFor(s.getStudentId())));
+        scoreTable_->setItem(row, 2, createReadOnlyItem(QString::fromStdString(s.getCourseId())));
+        scoreTable_->setItem(row, 3, createReadOnlyItem(QString::fromStdString(s.getSemester())));
+        scoreTable_->setItem(row, 4, createReadOnlyItem(QString::number(s.getUsualScore(), 'f', 1)));
+        scoreTable_->setItem(row, 5, createReadOnlyItem(QString::number(s.getFinalScore(), 'f', 1)));
+        scoreTable_->setItem(row, 6, createReadOnlyItem(QString::number(s.getTotalScore(), 'f', 1)));
+        ++row;
     }
 }
 
@@ -249,9 +480,9 @@ void TeacherWindow::editSelectedScore() {
         studentId.toStdString(),
         courseId.toStdString(),
         semester.toStdString(),
-        scoreTable_->item(row, 3)->text().toDouble(),
         scoreTable_->item(row, 4)->text().toDouble(),
-        scoreTable_->item(row, 5)->text().toDouble());
+        scoreTable_->item(row, 5)->text().toDouble(),
+        scoreTable_->item(row, 6)->text().toDouble());
 
     ScoreEditDialog dialog(current, this);
     if (dialog.exec() != QDialog::Accepted) {
@@ -301,8 +532,8 @@ bool TeacherWindow::selectedScoreKey(QString& studentId, QString& courseId, QStr
     if (row < 0) return false;
 
     const auto* s = scoreTable_->item(row, 0);
-    const auto* c = scoreTable_->item(row, 1);
-    const auto* sem = scoreTable_->item(row, 2);
+    const auto* c = scoreTable_->item(row, 2);
+    const auto* sem = scoreTable_->item(row, 3);
     if (!s || !c || !sem) return false;
 
     studentId = s->text();
@@ -316,7 +547,7 @@ bool TeacherWindow::selectedScoreKey(QString& studentId, QString& courseId, QStr
 // ---------------------------------------------------------------------------
 
 QWidget* TeacherWindow::createMyStatsPage() {
-    auto* page = new QWidget(this);
+    auto* page = createBackgroundPage();
     auto* rootLayout = new QVBoxLayout(page);
 
     auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>我的课程统计</b>"), page);
@@ -420,7 +651,7 @@ void TeacherWindow::queryCourseRanking() {
 // ---------------------------------------------------------------------------
 
 QWidget* TeacherWindow::createAccountPage() {
-    auto* page = new QWidget(this);
+    auto* page = createBackgroundPage();
     auto* rootLayout = new QVBoxLayout(page);
 
     auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>账户</b>"), page);
@@ -462,6 +693,99 @@ QWidget* TeacherWindow::createAccountPage() {
     });
 
     return page;
+}
+
+QWidget* TeacherWindow::createBackgroundSettingsPage() {
+    auto* page = createBackgroundPage();
+    auto* rootLayout = new QVBoxLayout(page);
+
+    auto* titleLabel = new QLabel(QString::fromUtf8(u8"<b>背景设置</b>"), page);
+    auto* introLabel = new QLabel(
+        QString::fromUtf8(u8"可以选择一张 PNG 图片作为当前教师端背景，也可以调整透明度，避免影响表格和文字阅读。"),
+        page);
+    introLabel->setWordWrap(true);
+    rootLayout->addWidget(titleLabel);
+    rootLayout->addWidget(introLabel);
+    rootLayout->addSpacing(12);
+
+    auto* actionLayout = new QHBoxLayout();
+    auto* chooseButton = new QPushButton(QString::fromUtf8(u8"选择 PNG 背景"), page);
+    auto* clearButton = new QPushButton(QString::fromUtf8(u8"清除背景"), page);
+    actionLayout->addWidget(chooseButton);
+    actionLayout->addWidget(clearButton);
+    actionLayout->addStretch();
+    rootLayout->addLayout(actionLayout);
+
+    auto* opacityLayout = new QHBoxLayout();
+    opacityLayout->addWidget(new QLabel(QString::fromUtf8(u8"背景透明度"), page));
+    auto* opacitySlider = new QSlider(Qt::Horizontal, page);
+    opacitySlider->setRange(5, 45);
+    opacitySlider->setValue(static_cast<int>(
+        GuiBackground::loadOpacity(QString::fromLatin1(kTeacherBackgroundRoleKey)) * 100.0));
+    opacityLayout->addWidget(opacitySlider, 1);
+    rootLayout->addLayout(opacityLayout);
+    rootLayout->addStretch();
+
+    connect(chooseButton, &QPushButton::clicked, this, [this] {
+        chooseBackgroundImage();
+    });
+    connect(clearButton, &QPushButton::clicked, this, [this] {
+        clearBackgroundImage();
+    });
+    connect(opacitySlider, &QSlider::valueChanged, this, [this](int value) {
+        updateBackgroundOpacity(value);
+    });
+
+    return page;
+}
+
+BackgroundHostWidget* TeacherWindow::createBackgroundPage() {
+    auto* page = new BackgroundHostWidget(this);
+    page->setObjectName(QStringLiteral("RoleBackgroundPage"));
+    GuiBackground::applyBackgroundToPage(page, QString::fromLatin1(kTeacherBackgroundRoleKey));
+    backgroundPages_.push_back(page);
+    return page;
+}
+
+void TeacherWindow::refreshBackgroundPages() {
+    GuiBackground::applyBackgroundToPages(backgroundPages_, QString::fromLatin1(kTeacherBackgroundRoleKey));
+}
+
+void TeacherWindow::chooseBackgroundImage() {
+    const QString sourcePath = QFileDialog::getOpenFileName(
+        this,
+        QString::fromUtf8(u8"选择 PNG 背景"),
+        QString(),
+        QString::fromUtf8(u8"PNG 图片 (*.png)"));
+    if (sourcePath.isEmpty()) {
+        return;
+    }
+
+    QString errorMessage;
+    if (!GuiBackground::replaceBackgroundImage(
+            QString::fromLatin1(kTeacherBackgroundRoleKey), sourcePath, &errorMessage)) {
+        QMessageBox::warning(this, QString::fromUtf8(u8"背景设置失败"), errorMessage);
+        return;
+    }
+
+    refreshBackgroundPages();
+    QMessageBox::information(this, QString::fromUtf8(u8"背景已更新"), QString::fromUtf8(u8"背景图片已应用。"));
+}
+
+void TeacherWindow::clearBackgroundImage() {
+    QString errorMessage;
+    if (!GuiBackground::clearBackgroundImage(QString::fromLatin1(kTeacherBackgroundRoleKey), &errorMessage)) {
+        QMessageBox::warning(this, QString::fromUtf8(u8"背景设置失败"), errorMessage);
+        return;
+    }
+
+    refreshBackgroundPages();
+    QMessageBox::information(this, QString::fromUtf8(u8"背景已清除"), QString::fromUtf8(u8"已恢复浅色默认背景。"));
+}
+
+void TeacherWindow::updateBackgroundOpacity(int value) {
+    GuiBackground::saveOpacity(QString::fromLatin1(kTeacherBackgroundRoleKey), value / 100.0);
+    refreshBackgroundPages();
 }
 
 void TeacherWindow::showServiceError(const QString& title, const std::exception& e) {

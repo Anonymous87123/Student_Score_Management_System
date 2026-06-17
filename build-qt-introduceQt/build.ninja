@@ -121,6 +121,13 @@ build CMakeFiles/edusys_core.dir/src/service/StudentService.cpp.obj: CXX_COMPILE
   OBJECT_DIR = CMakeFiles\edusys_core.dir
   OBJECT_FILE_DIR = CMakeFiles\edusys_core.dir\src\service
 
+build CMakeFiles/edusys_core.dir/src/service/TeacherService.cpp.obj: CXX_COMPILER__edusys_core_unscanned_ D$:/Student_Score_Management_System/src/service/TeacherService.cpp || cmake_object_order_depends_target_edusys_core
+  DEP_FILE = CMakeFiles\edusys_core.dir\src\service\TeacherService.cpp.obj.d
+  FLAGS = -std=c++17 -Wall -Wextra -Wpedantic
+  INCLUDES = -ID:/Student_Score_Management_System/include
+  OBJECT_DIR = CMakeFiles\edusys_core.dir
+  OBJECT_FILE_DIR = CMakeFiles\edusys_core.dir\src\service
+
 build CMakeFiles/edusys_core.dir/src/service/CourseService.cpp.obj: CXX_COMPILER__edusys_core_unscanned_ D$:/Student_Score_Management_System/src/service/CourseService.cpp || cmake_object_order_depends_target_edusys_core
   DEP_FILE = CMakeFiles\edusys_core.dir\src\service\CourseService.cpp.obj.d
   FLAGS = -std=c++17 -Wall -Wextra -Wpedantic
@@ -164,7 +171,7 @@ build CMakeFiles/edusys_core.dir/src/storage/BinaryWriter.cpp.obj: CXX_COMPILER_
 #############################################
 # Link the static library libedusys_core.a
 
-build libedusys_core.a: CXX_STATIC_LIBRARY_LINKER__edusys_core_ CMakeFiles/edusys_core.dir/src/app/AppContext.cpp.obj CMakeFiles/edusys_core.dir/src/common/Logger.cpp.obj CMakeFiles/edusys_core.dir/src/common/PasswordHasher.cpp.obj CMakeFiles/edusys_core.dir/src/model/Student.cpp.obj CMakeFiles/edusys_core.dir/src/model/Teacher.cpp.obj CMakeFiles/edusys_core.dir/src/model/UserAccount.cpp.obj CMakeFiles/edusys_core.dir/src/model/Course.cpp.obj CMakeFiles/edusys_core.dir/src/model/Score.cpp.obj CMakeFiles/edusys_core.dir/src/report/ReportExporter.cpp.obj CMakeFiles/edusys_core.dir/src/service/AuthService.cpp.obj CMakeFiles/edusys_core.dir/src/service/StudentService.cpp.obj CMakeFiles/edusys_core.dir/src/service/CourseService.cpp.obj CMakeFiles/edusys_core.dir/src/service/ScoreService.cpp.obj CMakeFiles/edusys_core.dir/src/service/StatsService.cpp.obj CMakeFiles/edusys_core.dir/src/storage/BinaryReader.cpp.obj CMakeFiles/edusys_core.dir/src/storage/BinaryWriter.cpp.obj
+build libedusys_core.a: CXX_STATIC_LIBRARY_LINKER__edusys_core_ CMakeFiles/edusys_core.dir/src/app/AppContext.cpp.obj CMakeFiles/edusys_core.dir/src/common/Logger.cpp.obj CMakeFiles/edusys_core.dir/src/common/PasswordHasher.cpp.obj CMakeFiles/edusys_core.dir/src/model/Student.cpp.obj CMakeFiles/edusys_core.dir/src/model/Teacher.cpp.obj CMakeFiles/edusys_core.dir/src/model/UserAccount.cpp.obj CMakeFiles/edusys_core.dir/src/model/Course.cpp.obj CMakeFiles/edusys_core.dir/src/model/Score.cpp.obj CMakeFiles/edusys_core.dir/src/report/ReportExporter.cpp.obj CMakeFiles/edusys_core.dir/src/service/AuthService.cpp.obj CMakeFiles/edusys_core.dir/src/service/StudentService.cpp.obj CMakeFiles/edusys_core.dir/src/service/TeacherService.cpp.obj CMakeFiles/edusys_core.dir/src/service/CourseService.cpp.obj CMakeFiles/edusys_core.dir/src/service/ScoreService.cpp.obj CMakeFiles/edusys_core.dir/src/service/StatsService.cpp.obj CMakeFiles/edusys_core.dir/src/storage/BinaryReader.cpp.obj CMakeFiles/edusys_core.dir/src/storage/BinaryWriter.cpp.obj
   OBJECT_DIR = CMakeFiles\edusys_core.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -249,6 +256,22 @@ build CMakeFiles/edusys_gui.dir/src/app/gui_main.cpp.obj: CXX_COMPILER__edusys_g
   OBJECT_DIR = CMakeFiles\edusys_gui.dir
   OBJECT_FILE_DIR = CMakeFiles\edusys_gui.dir\src\app
 
+build CMakeFiles/edusys_gui.dir/src/gui/BackgroundHostWidget.cpp.obj: CXX_COMPILER__edusys_gui_unscanned_ D$:/Student_Score_Management_System/src/gui/BackgroundHostWidget.cpp || cmake_object_order_depends_target_edusys_gui
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\edusys_gui.dir\src\gui\BackgroundHostWidget.cpp.obj.d
+  FLAGS = -std=c++17 -Wall -Wextra -Wpedantic
+  INCLUDES = -ID:/Student_Score_Management_System/include -isystem D:/Qt/6.11.0/mingw_64/include/QtWidgets -isystem D:/Qt/6.11.0/mingw_64/include -isystem D:/Qt/6.11.0/mingw_64/include/QtCore -isystem D:/Qt/6.11.0/mingw_64/mkspecs/win32-g++ -isystem D:/Qt/6.11.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\edusys_gui.dir
+  OBJECT_FILE_DIR = CMakeFiles\edusys_gui.dir\src\gui
+
+build CMakeFiles/edusys_gui.dir/src/gui/BackgroundSettings.cpp.obj: CXX_COMPILER__edusys_gui_unscanned_ D$:/Student_Score_Management_System/src/gui/BackgroundSettings.cpp || cmake_object_order_depends_target_edusys_gui
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\edusys_gui.dir\src\gui\BackgroundSettings.cpp.obj.d
+  FLAGS = -std=c++17 -Wall -Wextra -Wpedantic
+  INCLUDES = -ID:/Student_Score_Management_System/include -isystem D:/Qt/6.11.0/mingw_64/include/QtWidgets -isystem D:/Qt/6.11.0/mingw_64/include -isystem D:/Qt/6.11.0/mingw_64/include/QtCore -isystem D:/Qt/6.11.0/mingw_64/mkspecs/win32-g++ -isystem D:/Qt/6.11.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\edusys_gui.dir
+  OBJECT_FILE_DIR = CMakeFiles\edusys_gui.dir\src\gui
+
 build CMakeFiles/edusys_gui.dir/src/gui/LoginDialog.cpp.obj: CXX_COMPILER__edusys_gui_unscanned_ D$:/Student_Score_Management_System/src/gui/LoginDialog.cpp || cmake_object_order_depends_target_edusys_gui
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\edusys_gui.dir\src\gui\LoginDialog.cpp.obj.d
@@ -273,6 +296,14 @@ build CMakeFiles/edusys_gui.dir/src/gui/StudentEditDialog.cpp.obj: CXX_COMPILER_
   OBJECT_DIR = CMakeFiles\edusys_gui.dir
   OBJECT_FILE_DIR = CMakeFiles\edusys_gui.dir\src\gui
 
+build CMakeFiles/edusys_gui.dir/src/gui/TeacherEditDialog.cpp.obj: CXX_COMPILER__edusys_gui_unscanned_ D$:/Student_Score_Management_System/src/gui/TeacherEditDialog.cpp || cmake_object_order_depends_target_edusys_gui
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\edusys_gui.dir\src\gui\TeacherEditDialog.cpp.obj.d
+  FLAGS = -std=c++17 -Wall -Wextra -Wpedantic
+  INCLUDES = -ID:/Student_Score_Management_System/include -isystem D:/Qt/6.11.0/mingw_64/include/QtWidgets -isystem D:/Qt/6.11.0/mingw_64/include -isystem D:/Qt/6.11.0/mingw_64/include/QtCore -isystem D:/Qt/6.11.0/mingw_64/mkspecs/win32-g++ -isystem D:/Qt/6.11.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\edusys_gui.dir
+  OBJECT_FILE_DIR = CMakeFiles\edusys_gui.dir\src\gui
+
 build CMakeFiles/edusys_gui.dir/src/gui/CourseEditDialog.cpp.obj: CXX_COMPILER__edusys_gui_unscanned_ D$:/Student_Score_Management_System/src/gui/CourseEditDialog.cpp || cmake_object_order_depends_target_edusys_gui
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\edusys_gui.dir\src\gui\CourseEditDialog.cpp.obj.d
@@ -284,6 +315,14 @@ build CMakeFiles/edusys_gui.dir/src/gui/CourseEditDialog.cpp.obj: CXX_COMPILER__
 build CMakeFiles/edusys_gui.dir/src/gui/ScoreEditDialog.cpp.obj: CXX_COMPILER__edusys_gui_unscanned_ D$:/Student_Score_Management_System/src/gui/ScoreEditDialog.cpp || cmake_object_order_depends_target_edusys_gui
   DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
   DEP_FILE = CMakeFiles\edusys_gui.dir\src\gui\ScoreEditDialog.cpp.obj.d
+  FLAGS = -std=c++17 -Wall -Wextra -Wpedantic
+  INCLUDES = -ID:/Student_Score_Management_System/include -isystem D:/Qt/6.11.0/mingw_64/include/QtWidgets -isystem D:/Qt/6.11.0/mingw_64/include -isystem D:/Qt/6.11.0/mingw_64/include/QtCore -isystem D:/Qt/6.11.0/mingw_64/mkspecs/win32-g++ -isystem D:/Qt/6.11.0/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\edusys_gui.dir
+  OBJECT_FILE_DIR = CMakeFiles\edusys_gui.dir\src\gui
+
+build CMakeFiles/edusys_gui.dir/src/gui/ScoreBarChartWidget.cpp.obj: CXX_COMPILER__edusys_gui_unscanned_ D$:/Student_Score_Management_System/src/gui/ScoreBarChartWidget.cpp || cmake_object_order_depends_target_edusys_gui
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\edusys_gui.dir\src\gui\ScoreBarChartWidget.cpp.obj.d
   FLAGS = -std=c++17 -Wall -Wextra -Wpedantic
   INCLUDES = -ID:/Student_Score_Management_System/include -isystem D:/Qt/6.11.0/mingw_64/include/QtWidgets -isystem D:/Qt/6.11.0/mingw_64/include -isystem D:/Qt/6.11.0/mingw_64/include/QtCore -isystem D:/Qt/6.11.0/mingw_64/mkspecs/win32-g++ -isystem D:/Qt/6.11.0/mingw_64/include/QtGui
   OBJECT_DIR = CMakeFiles\edusys_gui.dir
@@ -321,7 +360,7 @@ build CMakeFiles/edusys_gui.dir/src/gui/StudentWindow.cpp.obj: CXX_COMPILER__edu
 #############################################
 # Link the executable edusys_gui.exe
 
-build edusys_gui.exe: CXX_EXECUTABLE_LINKER__edusys_gui_ CMakeFiles/edusys_gui.dir/src/app/gui_main.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/LoginDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/AdminWindow.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/StudentEditDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/CourseEditDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/ScoreEditDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/ChangePasswordDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/TeacherWindow.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/StudentWindow.cpp.obj | libedusys_core.a D$:/Qt/6.11.0/mingw_64/lib/libQt6Widgets.a D$:/Qt/6.11.0/mingw_64/lib/libQt6Gui.a D$:/Qt/6.11.0/mingw_64/lib/libQt6Core.a D$:/Qt/6.11.0/mingw_64/lib/libQt6EntryPoint.a || libedusys_core.a
+build edusys_gui.exe: CXX_EXECUTABLE_LINKER__edusys_gui_ CMakeFiles/edusys_gui.dir/src/app/gui_main.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/BackgroundHostWidget.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/BackgroundSettings.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/LoginDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/AdminWindow.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/StudentEditDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/TeacherEditDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/CourseEditDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/ScoreEditDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/ScoreBarChartWidget.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/ChangePasswordDialog.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/TeacherWindow.cpp.obj CMakeFiles/edusys_gui.dir/src/gui/StudentWindow.cpp.obj | libedusys_core.a D$:/Qt/6.11.0/mingw_64/lib/libQt6Widgets.a D$:/Qt/6.11.0/mingw_64/lib/libQt6Gui.a D$:/Qt/6.11.0/mingw_64/lib/libQt6Core.a D$:/Qt/6.11.0/mingw_64/lib/libQt6EntryPoint.a || libedusys_core.a
   LINK_FLAGS = -mwindows
   LINK_LIBRARIES = libedusys_core.a  D:/Qt/6.11.0/mingw_64/lib/libQt6Widgets.a  D:/Qt/6.11.0/mingw_64/lib/libQt6Gui.a  D:/Qt/6.11.0/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  D:/Qt/6.11.0/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\edusys_gui.dir

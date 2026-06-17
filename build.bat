@@ -17,6 +17,7 @@ set FLAGS=-std=c++17 -Wall -Wextra -Wpedantic -O2 -Iinclude
     src\report\ReportExporter.cpp ^
     src\service\AuthService.cpp ^
     src\service\StudentService.cpp ^
+    src\service\TeacherService.cpp ^
     src\service\CourseService.cpp ^
     src\service\ScoreService.cpp ^
     src\service\StatsService.cpp ^

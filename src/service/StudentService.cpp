@@ -1,6 +1,7 @@
 #include "EduSys/service/StudentService.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <sstream>
 
 #include "EduSys/common/Exception.hpp"
@@ -26,6 +27,45 @@ void validateStudent(const Student& s) {
     if (s.getEnrollYear() <= 0) throw ValidationException("Student enrollYear must be positive");
 }
 
+bool parseIdNumber(const std::string& id, std::string& prefix, unsigned long long& number) {
+    std::size_t digitBegin = 0;
+    while (digitBegin < id.size()
+           && !std::isdigit(static_cast<unsigned char>(id[digitBegin]))) {
+        ++digitBegin;
+    }
+    if (digitBegin == id.size()) {
+        return false;
+    }
+
+    std::size_t pos = digitBegin;
+    unsigned long long value = 0;
+    while (pos < id.size() && std::isdigit(static_cast<unsigned char>(id[pos]))) {
+        value = value * 10 + static_cast<unsigned long long>(id[pos] - '0');
+        ++pos;
+    }
+    if (pos != id.size()) {
+        return false;
+    }
+
+    prefix = id.substr(0, digitBegin);
+    number = value;
+    return true;
+}
+
+bool studentIdLess(const Student& lhs, const Student& rhs) {
+    std::string lhsPrefix;
+    std::string rhsPrefix;
+    unsigned long long lhsNumber = 0;
+    unsigned long long rhsNumber = 0;
+    const bool lhsParsed = parseIdNumber(lhs.getId(), lhsPrefix, lhsNumber);
+    const bool rhsParsed = parseIdNumber(rhs.getId(), rhsPrefix, rhsNumber);
+
+    if (lhsParsed && rhsParsed && lhsPrefix == rhsPrefix && lhsNumber != rhsNumber) {
+        return lhsNumber < rhsNumber;
+    }
+    return lhs.getId() < rhs.getId();
+}
+
 } // namespace
 
 std::vector<Student> StudentService::listAll(const Session& session) {
@@ -39,6 +79,7 @@ std::vector<Student> StudentService::listAll(const Session& session) {
             all.end());
     }
     // Admin / Teacher 全量返回
+    std::sort(all.begin(), all.end(), studentIdLess);
     return all;
 }
 

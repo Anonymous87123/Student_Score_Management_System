@@ -15,7 +15,7 @@ class Session;
 // 成绩服务：所有成绩相关业务规则的唯一入口。
 // 权限矩阵：
 //   Admin   : 全部读写
-//   Teacher : 只读自己授课的成绩；只写自己授课的成绩（Course.teacherId == session.ownerId）
+//   Teacher : 只读自己授课的成绩；只写自己授课的成绩（Course 教师列表包含 session.ownerId）
 //   Student : 只读自己的成绩；禁止写
 // 唯一键：(studentId, courseId, semester)；upsert 同键覆写、不同键追加。
 // 范围校验：usual/final/total ∈ [SCORE_MIN, SCORE_MAX]；studentId / courseId 必须存在。
@@ -27,8 +27,38 @@ public:
         : scoreRepo_(scoreRepo), courseRepo_(courseRepo), studentRepo_(studentRepo) {}
 
     std::vector<Score> listAll(const Session& session);
+    std::vector<Score> query(const Session& session,
+                             const std::string& studentId = {},
+                             const std::string& courseId = {},
+                             const std::string& className = {},
+                             const std::string& semester = {});
     std::vector<Score> findByStudent(const Session& session, const std::string& studentId);
     std::vector<Score> findByCourse(const Session& session, const std::string& courseId);
+    std::vector<Score> findByClass(const Session& session, const std::string& className);
+    std::vector<Score> findBySemester(const Session& session, const std::string& semester);
+    std::vector<Score> findByStudentAndCourse(const Session& session,
+                                               const std::string& studentId,
+                                               const std::string& courseId);
+    std::vector<Score> findByStudentAndSemester(const Session& session,
+                                                 const std::string& studentId,
+                                                 const std::string& semester);
+    std::vector<Score> findByStudentCourseAndSemester(const Session& session,
+                                                       const std::string& studentId,
+                                                       const std::string& courseId,
+                                                       const std::string& semester);
+    std::vector<Score> findByCourseAndSemester(const Session& session,
+                                                const std::string& courseId,
+                                                const std::string& semester);
+    std::vector<Score> findByClassAndSemester(const Session& session,
+                                               const std::string& className,
+                                               const std::string& semester);
+    std::vector<Score> findByCourseAndClass(const Session& session,
+                                             const std::string& courseId,
+                                             const std::string& className);
+    std::vector<Score> findByCourseClassAndSemester(const Session& session,
+                                                     const std::string& courseId,
+                                                     const std::string& className,
+                                                     const std::string& semester);
 
     // upsert：同 (studentId, courseId, semester) 已存在 -> 覆写；否则追加。
     void upsert(const Session& session, const Score& score);

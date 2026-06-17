@@ -2,9 +2,26 @@
 
 #include <chrono>
 #include <ctime>
+#include <cerrno>
 #include <iomanip>
-#include <filesystem>
 #include <sstream>
+#include <string>
+
+#ifdef _WIN32
+#  include <direct.h>
+#  include <sys/stat.h>
+#  define EDUSYS_MKDIR(p) _mkdir(p)
+#  define EDUSYS_STAT(path, info) _stat((path), (info))
+#  define EDUSYS_STAT_STRUCT struct _stat
+#  define EDUSYS_ISDIR(mode) (((mode) & _S_IFDIR) != 0)
+#else
+#  include <sys/stat.h>
+#  include <sys/types.h>
+#  define EDUSYS_MKDIR(p) mkdir((p), 0755)
+#  define EDUSYS_STAT(path, info) stat((path), (info))
+#  define EDUSYS_STAT_STRUCT struct stat
+#  define EDUSYS_ISDIR(mode) S_ISDIR(mode)
+#endif
 
 #include "EduSys/common/Constants.hpp"
 #include "EduSys/common/Exception.hpp"
@@ -36,6 +53,44 @@ const char* levelTag(LogLevel level) {
     return "INFO";
 }
 
+std::string formatErrno(int err) {
+    return "errno=" + std::to_string(err);
+}
+
+void ensureDirectoryExists(const std::string& path) {
+    if (path.empty()) {
+        return;
+    }
+
+    if (EDUSYS_MKDIR(path.c_str()) == 0) {
+        return;
+    }
+
+    const int mkdirErr = errno;
+    if (mkdirErr != EEXIST) {
+        throw StorageException("Failed to create log directory '" + path + "' (" +
+                               formatErrno(mkdirErr) + ")");
+    }
+
+    EDUSYS_STAT_STRUCT dirInfo{};
+    if (EDUSYS_STAT(path.c_str(), &dirInfo) != 0) {
+        throw StorageException("Path '" + path + "' exists but could not be inspected (" +
+                               formatErrno(errno) + ")");
+    }
+    if (!EDUSYS_ISDIR(dirInfo.st_mode)) {
+        throw StorageException("Path '" + path + "' exists but is not a directory.");
+    }
+}
+
+void ensureLogParentDirectory() {
+    const std::string logPath(LOG_FILE);
+    const auto pos = logPath.find_last_of("/\\");
+    if (pos == std::string::npos) {
+        return;
+    }
+    ensureDirectoryExists(logPath.substr(0, pos));
+}
+
 } // namespace
 
 Logger& Logger::instance() {
@@ -44,19 +99,11 @@ Logger& Logger::instance() {
 }
 
 Logger::Logger() {
-    try {
-        const std::filesystem::path logPath(LOG_FILE);
-        const auto parent = logPath.parent_path();
-        if (!parent.empty()) {
-            std::filesystem::create_directories(parent);
-        }
+    ensureLogParentDirectory();
 
-        out_.open(logPath, std::ios::out | std::ios::app);
-        if (!out_.is_open()) {
-            throw StorageException(std::string("Failed to open log file: ") + LOG_FILE);
-        }
-    } catch (const std::filesystem::filesystem_error& e) {
-        throw StorageException(std::string("Failed to prepare log file: ") + e.what());
+    out_.open(LOG_FILE, std::ios::out | std::ios::app);
+    if (!out_.is_open()) {
+        throw StorageException(std::string("Failed to open log file: ") + LOG_FILE);
     }
 }
 

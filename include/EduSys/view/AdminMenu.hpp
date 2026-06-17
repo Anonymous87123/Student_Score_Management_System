@@ -7,6 +7,7 @@ namespace EduSys {
 class Session;
 class AuthService;
 class StudentService;
+class TeacherService;
 class CourseService;
 class ScoreService;
 class StatsService;
@@ -19,18 +20,21 @@ public:
     AdminMenu(Session&         session,
               AuthService&     authSvc,
               StudentService&  studentSvc,
+              TeacherService&  teacherSvc,
               CourseService&   courseSvc,
               ScoreService&    scoreSvc,
               StatsService&    statsSvc,
               ReportExporter&  reportExporter)
         : session_(session), authSvc_(authSvc),
-          studentSvc_(studentSvc), courseSvc_(courseSvc), scoreSvc_(scoreSvc),
+          studentSvc_(studentSvc), teacherSvc_(teacherSvc),
+          courseSvc_(courseSvc), scoreSvc_(scoreSvc),
           statsSvc_(statsSvc), reportExporter_(reportExporter) {}
 
     void run() override;
 
 private:
     void studentMenu();
+    void teacherMenu();
     void courseMenu();
     void scoreMenu();
     void statsMenu();
@@ -41,6 +45,7 @@ private:
     Session&         session_;
     AuthService&     authSvc_;
     StudentService&  studentSvc_;
+    TeacherService&  teacherSvc_;
     CourseService&   courseSvc_;
     ScoreService&    scoreSvc_;
     StatsService&    statsSvc_;

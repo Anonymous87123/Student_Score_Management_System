@@ -7,6 +7,7 @@
 #include "EduSys/app/AppContext.hpp"
 #include "EduSys/common/Exception.hpp"
 #include "EduSys/common/Logger.hpp"
+#include "EduSys/common/PasswordHasher.hpp"
 #include "EduSys/common/Types.hpp"
 #include "EduSys/model/Course.hpp"
 #include "EduSys/model/Score.hpp"
@@ -85,9 +86,19 @@ void runWeek11SelfCheck(EduSys::StudentRepository& studentRepo,
     Session teacherSession;
     teacherSession.login("t001", RoleType::Teacher, "T001");
 
+    auto hasStudentNow = [&]() {
+        const auto students = studentRepo.loadAll();
+        return [students](const std::string& id) {
+            return std::any_of(students.begin(), students.end(),
+                [&](const Student& s) { return s.getId() == id; });
+        };
+    };
+
     if (seededThisRun) {
-        Student s003("S003", "Wang Wu", "13800000003", "Computer Science", "CS2501", 2025);
-        studentSvc.create(adminSession, s003);
+        if (!hasStudentNow()("S003")) {
+            Student s003("S003", "Wang Wu", "13800000003", "Computer Science", "CS2501", 2025);
+            studentSvc.create(adminSession, s003);
+        }
 
         Score s003Score("S003", "C001", "2025-2026-1", 92.0, 95.0, 94.1);
         scoreSvc.upsert(teacherSession, s003Score);
@@ -95,12 +106,39 @@ void runWeek11SelfCheck(EduSys::StudentRepository& studentRepo,
         Score s001Updated("S001", "C001", "2025-2026-1", 88.0, 92.0, 90.8);
         scoreSvc.upsert(adminSession, s001Updated);
 
-        studentSvc.remove(adminSession, "S002");
+        if (!hasStudentNow()("S002")) {
+            Student s002("S002", "Li Si", "13800000002", "Computer Science", "CS2501", 2025);
+            studentSvc.create(adminSession, s002);
+        }
+
+        auto usersForCascadeCheck = userRepo.loadAll();
+        const bool hasS002Account = std::any_of(
+            usersForCascadeCheck.begin(), usersForCascadeCheck.end(),
+            [](const UserAccount& u) {
+                return u.getRole() == RoleType::Student && u.getOwnerId() == "S002";
+            });
+        if (!hasS002Account) {
+            usersForCascadeCheck.emplace_back(
+                "s002", PasswordHasher::hash("s002pw"), RoleType::Student, "S002", true);
+            userRepo.saveAll(usersForCascadeCheck);
+        }
+
+        Score s002Score("S002", "C001", "2025-2026-1", 70.0, 75.0, 73.5);
+        scoreSvc.upsert(adminSession, s002Score);
+
+        if (hasStudentNow()("S002")) {
+            studentSvc.remove(adminSession, "S002");
+        }
 
         logger.info("Week 11 mutation block executed (S003 created, S001 score updated, S002 cascade-deleted).");
         std::cout << " [Week11] MUTATIONS done     : +S003, S001 score updated, -S002 (cascade)\n";
     } else {
-        std::cout << " [Week11] MUTATIONS skipped  : LOADED run, verifying persisted state instead\n";
+        if (hasStudentNow()("S002")) {
+            studentSvc.remove(adminSession, "S002");
+            std::cout << " [Week11] MUTATIONS cleanup  : removed lingering S002 from persisted data\n";
+        } else {
+            std::cout << " [Week11] MUTATIONS skipped  : LOADED run, verifying persisted state instead\n";
+        }
     }
 
     auto finalStudents = studentRepo.loadAll();
@@ -256,7 +294,7 @@ void runWeek13BoundaryCheck(EduSys::StudentRepository& studentRepo,
     {
         auto ownCourses = courseSvc.listAll(teacherT001);
         if (!std::all_of(ownCourses.begin(), ownCourses.end(),
-                [](const Course& c) { return c.getTeacherId() == "T001"; })) {
+                [](const Course& c) { return c.hasTeacher("T001"); })) {
             throw EduException("E3: teacher listAll leaked non-own course");
         }
         std::cout << "   [E3 teacher course whitelist] PASS (n="
@@ -267,7 +305,7 @@ void runWeek13BoundaryCheck(EduSys::StudentRepository& studentRepo,
         for (const auto& s : ownScores) {
             auto it = std::find_if(courses.begin(), courses.end(),
                 [&](const Course& c) { return c.getCourseId() == s.getCourseId(); });
-            if (it == courses.end() || it->getTeacherId() != "T001") {
+            if (it == courses.end() || !it->hasTeacher("T001")) {
                 throw EduException("E4: teacher score listAll leaked non-own course");
             }
         }
@@ -287,6 +325,7 @@ int runInteractiveLoop(EduSys::AppContext& appContext) {
 
     auto& authSvc        = appContext.authService;
     auto& studentSvc     = appContext.studentService;
+    auto& teacherSvc     = appContext.teacherService;
     auto& courseSvc      = appContext.courseService;
     auto& scoreSvc       = appContext.scoreService;
     auto& statsSvc       = appContext.statsService;
@@ -342,7 +381,7 @@ int runInteractiveLoop(EduSys::AppContext& appContext) {
 
             switch (acc.getRole()) {
                 case RoleType::Admin: {
-                    AdminMenu menu(session, authSvc, studentSvc, courseSvc, scoreSvc,
+                    AdminMenu menu(session, authSvc, studentSvc, teacherSvc, courseSvc, scoreSvc,
                                    statsSvc, reportExporter);
                     menu.run();
                     break;
@@ -353,7 +392,7 @@ int runInteractiveLoop(EduSys::AppContext& appContext) {
                     break;
                 }
                 case RoleType::Student: {
-                    StudentMenu menu(session, authSvc, studentSvc, scoreSvc, statsSvc);
+                    StudentMenu menu(session, authSvc, studentSvc, courseSvc, scoreSvc, statsSvc);
                     menu.run();
                     break;
                 }
